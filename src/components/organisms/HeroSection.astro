@@ -1,0 +1,262 @@
+---
+import ActionGroup from "../molecules/ActionGroup.astro";
+import ProofBar from "../molecules/ProofBar.astro";
+import HeroSandbox from "./HeroSandbox.astro";
+---
+
+<section class="hero-section" id="hero-section" aria-label="CatchBug Introduction">
+  <!-- Atmospheric Avionics Backdrop -->
+  <div class="hero-ambient-glow" aria-hidden="true"></div>
+
+  <div class="container hero-grid">
+    <!-- Left Column: Value Proposition & Conversion -->
+    <div class="hero-copy-column">
+      <h2 class="hero-headline" data-animate="headline">
+        Stop explaining bugs.<br class="headline-break" />
+        <span class="mint-accent" data-animate="accent">Catch them instantly.</span>
+      </h2>
+
+      <p class="hero-subtext" data-animate="subtext">
+        Tired of vague <em>"the page is broken"</em> bug reports? CatchBug turns five
+        minutes of manual DevTools digging into a three-second diagnostic dispatch.
+        Auto-captures failing endpoints, console traces, and click breadcrumbs with
+        zero credential leaks.
+      </p>
+
+      <div class="hero-actions-wrap" data-animate="actions">
+        <ActionGroup class="hero-actions" />
+      </div>
+
+      <div class="hero-proof-wrap" data-animate="proof">
+        <ProofBar />
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Avionics Cockpit Sandbox -->
+    <div class="hero-visual-column" data-animate="visual">
+      <HeroSandbox />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { getLenis } from '../../lib/lenis';
+
+  function setupHero() {
+    const hero = document.getElementById("hero-section");
+    if (!hero) return;
+
+    // Trigger entrance transition on next frame
+    requestAnimationFrame(() => {
+      hero.classList.add("is-revealed");
+    });
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) return;
+
+    // Connect with Lenis scroll for high-performance avionics parallax.
+    const glow = hero.querySelector<HTMLElement>(".hero-ambient-glow");
+    const visual = hero.querySelector<HTMLElement>(".hero-visual-column");
+    const copy = hero.querySelector<HTMLElement>(".hero-copy-column");
+
+    let heroHeight = hero.offsetHeight;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        heroHeight = entry.contentRect.height;
+      }
+    });
+    ro.observe(hero);
+
+    function handleScroll(scroll: number) {
+      if (scroll > heroHeight * 1.5) return;
+      
+      if (glow) {
+        glow.style.transform = `translate3d(0, ${(scroll * 0.22).toFixed(1)}px, 0)`;
+      }
+      
+      // Desktop/tablet multi-layer depth elevation
+      if (window.innerWidth >= 768) {
+        if (visual) {
+          visual.style.transform = `translate3d(0, ${(scroll * 0.12).toFixed(1)}px, 0)`;
+        }
+        if (copy) {
+          copy.style.transform = `translate3d(0, ${(scroll * 0.04).toFixed(1)}px, 0)`;
+        }
+      }
+    }
+
+    function attachLenisScroll() {
+      getLenis()?.on("scroll", (e) => handleScroll(e.scroll));
+    }
+
+    if (getLenis()) {
+      attachLenisScroll();
+    } else {
+      window.addEventListener("lenis:ready", attachLenisScroll, { once: true });
+    }
+  }
+
+  setupHero();
+  document.addEventListener("astro:page-load", setupHero);
+</script>
+
+<style>
+  .hero-section {
+    position: relative;
+    padding-top: clamp(48px, 8vw, 96px);
+    padding-bottom: clamp(64px, 10vw, 120px);
+    overflow: hidden;
+  }
+
+  /* Atmospheric Avionics Ambient Glow */
+  .hero-ambient-glow {
+    position: absolute;
+    top: -15%;
+    left: 10%;
+    width: 75vw;
+    height: 75vw;
+    max-width: 960px;
+    max-height: 960px;
+    border-radius: var(--radius-full, 9999px);
+    background: radial-gradient(
+      circle,
+      rgba(107, 249, 156, 0.08) 0%,
+      rgba(3, 169, 163, 0.04) 40%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(64px);
+    opacity: 0.65;
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-grid {
+      grid-template-columns: 1.1fr 1fr;
+      gap: clamp(32px, 5vw, 64px);
+    }
+  }
+
+  .hero-copy-column {
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 4.25rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-lg);
+    text-wrap: balance;
+  }
+
+  @media (max-width: 480px) {
+    .headline-break {
+      display: none;
+    }
+  }
+
+  .mint-accent {
+    color: var(--color-primary);
+    display: inline-block;
+  }
+
+  .hero-subtext {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    max-width: 62ch;
+    margin-bottom: var(--space-xl);
+  }
+
+  .hero-subtext em {
+    font-style: normal;
+    color: var(--color-text-primary);
+  }
+
+  .hero-actions-wrap {
+    width: 100%;
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero-proof-wrap {
+    width: 100%;
+  }
+
+  .hero-visual-column {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Hardware-Accelerated Entrance Transitions */
+  [data-animate] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  [data-animate="headline"] {
+    transition-duration: 0.65s;
+    transition-delay: 0.05s;
+  }
+
+  [data-animate="subtext"] {
+    transition-delay: 0.15s;
+  }
+
+  [data-animate="actions"] {
+    transition-delay: 0.25s;
+  }
+
+  [data-animate="proof"] {
+    transition-delay: 0.35s;
+  }
+
+  [data-animate="visual"] {
+    transform: translateY(24px) scale(0.98);
+    transition-duration: 0.75s;
+    transition-delay: 0.18s;
+  }
+
+  .hero-section.is-revealed [data-animate] {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-ambient-glow {
+      filter: blur(32px);
+      opacity: 0.35;
+      transform: none !important;
+    }
+
+    [data-animate] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
+  }
+</style>

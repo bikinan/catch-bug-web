@@ -1,0 +1,182 @@
+---
+import Button from '../atoms/Button.astro';
+import Icon from '../atoms/Icon.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+let starCount = 0;
+try {
+  const headers: Record<string, string> = {
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'CatchBug-Web',
+  };
+  if (process.env.GITHUB_TOKEN) {
+    headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+  }
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
+  const res = await fetch('https://api.github.com/repos/bikinan/catch-bug', {
+    headers,
+    signal: controller.signal,
+  });
+  clearTimeout(timeoutId);
+  if (res.ok) {
+    const data = await res.json();
+    starCount = typeof data.stargazers_count === 'number' ? data.stargazers_count : 0;
+  }
+} catch {
+  // Graceful fallback if offline, timeout, or rate-limited during build
+  starCount = 0;
+}
+
+const hasStars = starCount > 0;
+const formattedStars = starCount >= 1000
+  ? `${(starCount / 1000).toFixed(1)}k`
+  : String(starCount);
+---
+
+<div class={`action-group ${className}`}>
+  <div class="buttons-row">
+    <Button
+      variant="primary"
+      size="lg"
+      href="/docs/installation"
+      id="hero-cta-install"
+    >
+      <Icon name="download" size={20} />
+      <span>Get Extension & Docs</span>
+      <Icon name="arrow-right" size={16} />
+    </Button>
+
+    <Button
+      variant="secondary"
+      size="lg"
+      href="https://github.com/bikinan/catch-bug"
+      target="_blank"
+      rel="noopener noreferrer"
+      id="hero-cta-github"
+    >
+      <Icon name="github" size={20} />
+      <span>Star on GitHub</span>
+      <span class="star-count" id="github-star-count" style={hasStars ? '' : 'display: none;'}>★ {formattedStars}</span>
+    </Button>
+  </div>
+
+  <div class="compatibility-hint">
+    <Icon name="shield" size={14} class="shield-icon" />
+    <span>Developer Preview &bull; Manifest V3 Native &bull; Chrome, Edge, Brave, Arc</span>
+  </div>
+</div>
+
+<script>
+  // Client-side enhancement with local storage cache (1-hour TTL) to prevent GitHub API rate-limits
+  async function refreshStars() {
+    const badge = document.getElementById('github-star-count');
+    if (!badge) return;
+
+    const CACHE_KEY = 'catchbug_gh_stars';
+    const CACHE_TIME_KEY = 'catchbug_gh_stars_time';
+    const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+      const now = Date.now();
+
+      if (cached !== null && cachedTime && now - Number(cachedTime) < CACHE_TTL_MS) {
+        const count = Number(cached);
+        if (count > 0) {
+          badge.textContent = `★ ${count >= 1000 ? (count / 1000).toFixed(1) + 'k' : count}`;
+          badge.style.display = 'inline-flex';
+        }
+        return;
+      }
+
+      const res = await fetch('https://api.github.com/repos/bikinan/catch-bug');
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof data.stargazers_count === 'number') {
+          const count = data.stargazers_count;
+          localStorage.setItem(CACHE_KEY, String(count));
+          localStorage.setItem(CACHE_TIME_KEY, String(now));
+          if (count > 0) {
+            badge.textContent = `★ ${count >= 1000 ? (count / 1000).toFixed(1) + 'k' : count}`;
+            badge.style.display = 'inline-flex';
+          }
+        }
+      } else if (res.status === 403 || res.status === 429) {
+        // Rate limit hit: use cached count if available, otherwise don't show an error
+        if (cached !== null && Number(cached) > 0) {
+          const count = Number(cached);
+          badge.textContent = `★ ${count >= 1000 ? (count / 1000).toFixed(1) + 'k' : count}`;
+          badge.style.display = 'inline-flex';
+        }
+      }
+    } catch {
+      // Offline / network failure: keep current or cached value
+    }
+  }
+
+  refreshStars();
+  document.addEventListener('astro:page-load', refreshStars);
+</script>
+
+<style>
+  .action-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .buttons-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .star-count {
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--color-primary);
+    transition: background var(--transition-fast);
+  }
+
+  .compatibility-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+  }
+
+  .shield-icon {
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 480px) {
+    .buttons-row {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .buttons-row :global(.btn) {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .compatibility-hint {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+</style>

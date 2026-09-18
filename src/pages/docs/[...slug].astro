@@ -1,0 +1,190 @@
+---
+import { getCollection, render } from "astro:content";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import Prose from "../../components/atoms/Prose.astro";
+import DocsPagination from "../../components/molecules/DocsPagination.astro";
+import Icon from "../../components/atoms/Icon.astro";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  const sorted = docs.sort((a, b) => a.data.order - b.data.order);
+  const defaultDoc = sorted[0];
+
+  return [
+    // Handle /docs root: renders defaultDoc
+    {
+      params: { slug: undefined },
+      props: { doc: defaultDoc, sortedDocs: sorted },
+    },
+    // Handle /docs/[slug]: renders each doc
+    ...sorted.map((doc) => ({
+      params: { slug: doc.id },
+      props: { doc, sortedDocs: sorted },
+    })),
+  ];
+}
+
+const { doc, sortedDocs } = Astro.props;
+const { Content, headings } = await render(doc);
+
+// Filter headings for TOC (h2 and h3)
+const tocItems = headings
+  .filter((h) => h.depth === 2 || h.depth === 3)
+  .map((h) => ({
+    id: h.slug,
+    text: h.text,
+    depth: h.depth as 2 | 3,
+  }));
+
+// Calculate previous & next document navigation
+const currentIndex = sortedDocs.findIndex((d) => d.id === doc.id);
+const prevDoc = currentIndex > 0 ? sortedDocs[currentIndex - 1] : undefined;
+const nextDoc =
+  currentIndex < sortedDocs.length - 1
+    ? sortedDocs[currentIndex + 1]
+    : undefined;
+
+const prevNav = prevDoc
+  ? { title: prevDoc.data.title, href: `/docs/${prevDoc.id}` }
+  : undefined;
+const nextNav = nextDoc
+  ? { title: nextDoc.data.title, href: `/docs/${nextDoc.id}` }
+  : undefined;
+---
+
+<DocsLayout
+  title={`${doc.data.title} | CatchBug Docs`}
+  description={doc.data.description}
+  currentSlug={doc.id}
+  tocItems={tocItems}
+>
+  <article class="docs-article">
+    <header class="docs-article-header">
+      <div class="header-breadcrumbs">
+        <a href="/" class="crumb-link">
+          <Icon name="arrow-right" size={12} class="back-arrow" />
+          <h1>CatchBug</h1>
+        </a>
+        <span class="crumb-separator">/</span>
+        <span class="crumb-section">{doc.data.section}</span>
+        <span class="crumb-separator">/</span>
+        <span class="crumb-active">{doc.data.title}</span>
+      </div>
+
+      <div class="header-meta-row">
+        <span class="section-tag">{doc.data.section}</span>
+        {doc.data.badge && <span class="version-tag">{doc.data.badge}</span>}
+      </div>
+
+      <h1 class="article-title">{doc.data.title}</h1>
+      <p class="article-lead">{doc.data.description}</p>
+    </header>
+
+    <Prose>
+      <Content />
+    </Prose>
+
+    <DocsPagination prev={prevNav} next={nextNav} />
+  </article>
+</DocsLayout>
+
+<style>
+  .docs-article {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .docs-article-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .header-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  .crumb-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .crumb-link:hover {
+    color: var(--color-mint, #6bf99c);
+  }
+
+  .back-arrow {
+    transform: rotate(180deg);
+  }
+
+  .crumb-separator {
+    opacity: 0.4;
+  }
+
+  .crumb-section {
+    color: var(--color-text-muted);
+  }
+
+  .crumb-active {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+
+  .header-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-tag {
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-mint, #6bf99c);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .version-tag {
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm, 6px);
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .article-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.15;
+  }
+
+  .article-lead {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 65ch;
+  }
+</style>

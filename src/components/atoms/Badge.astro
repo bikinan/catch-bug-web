@@ -1,0 +1,92 @@
+---
+interface Props {
+  variant?: 'mint' | 'teal' | 'error' | 'neutral';
+  pulse?: boolean;
+  size?: 'sm' | 'md';
+  id?: string;
+  class?: string;
+}
+
+const {
+  variant = 'mint',
+  pulse = false,
+  size = 'md',
+  id,
+  class: className = ''
+} = Astro.props;
+---
+
+<span id={id} class={`badge badge-${variant} badge-${size} ${className}`}>
+  {pulse && <span class="badge-pulse" aria-hidden="true" />}
+  <slot />
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    line-height: 1;
+    border: 1px solid transparent;
+    user-select: none;
+    letter-spacing: 0.02em;
+  }
+
+  .badge-sm {
+    padding: 4px 10px;
+    font-size: 0.6875rem;
+  }
+
+  .badge-md {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+  }
+
+  .badge-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    box-shadow: 0 0 8px currentColor;
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.4;
+      transform: scale(0.85);
+    }
+  }
+
+  /* Variants */
+  .badge-mint {
+    background-color: var(--color-primary-subtle);
+    border-color: rgba(107, 249, 156, 0.25);
+    color: var(--color-primary);
+  }
+
+  .badge-teal {
+    background-color: var(--color-secondary-subtle);
+    border-color: rgba(3, 169, 163, 0.3);
+    color: #4edcd5;
+  }
+
+  .badge-error {
+    background-color: var(--color-status-error-subtle);
+    border-color: rgba(244, 63, 94, 0.35);
+    color: var(--color-status-error);
+  }
+
+  .badge-neutral {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-secondary);
+  }
+</style>

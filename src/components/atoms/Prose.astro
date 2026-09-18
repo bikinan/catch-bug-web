@@ -1,0 +1,175 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['docs-prose', className]}>
+  <slot />
+</div>
+
+<style>
+  .docs-prose {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    max-width: 100%;
+  }
+
+  .docs-prose :global(h1) {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .docs-prose :global(h2) {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+    margin: 2.5rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    scroll-margin-top: 100px;
+  }
+
+  .docs-prose :global(h3) {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 2rem 0 0.75rem 0;
+    scroll-margin-top: 100px;
+  }
+
+  .docs-prose :global(h4) {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 1.5rem 0 0.5rem 0;
+    scroll-margin-top: 100px;
+  }
+
+  .docs-prose :global(p) {
+    margin: 0 0 1.25rem 0;
+  }
+
+  .docs-prose :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .docs-prose :global(a) {
+    color: var(--color-mint, #6bf99c);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity var(--transition-fast);
+  }
+
+  .docs-prose :global(a:hover) {
+    opacity: 0.85;
+  }
+
+  .docs-prose :global(ul),
+  .docs-prose :global(ol) {
+    margin: 0 0 1.25rem 0;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .docs-prose :global(li) {
+    line-height: 1.6;
+  }
+
+  .docs-prose :global(blockquote) {
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(107, 249, 156, 0.25);
+    background: rgba(107, 249, 156, 0.04);
+    border-radius: var(--radius-md, 10px);
+    color: var(--color-text-secondary);
+  }
+
+  .docs-prose :global(blockquote p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .docs-prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-border-subtle);
+    margin: 2.5rem 0;
+  }
+
+  .docs-prose :global(pre) {
+    margin: 1.25rem 0;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md, 10px);
+    background: rgba(6, 9, 14, 0.95);
+    border: 1px solid var(--color-border);
+    overflow-x: auto;
+  }
+
+  .docs-prose :global(pre code) {
+    font-family: var(--font-code);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--color-text-primary);
+  }
+
+  .docs-prose :global(:not(pre) > code) {
+    font-family: var(--font-code);
+    font-size: 0.875rem;
+    color: var(--color-mint, #6bf99c);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--color-border-subtle);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm, 6px);
+  }
+
+  .docs-prose :global(table) {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    border-radius: var(--radius-md, 10px);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .docs-prose :global(th) {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .docs-prose :global(td) {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .docs-prose :global(tr:last-child td) {
+    border-bottom: none;
+  }
+</style>

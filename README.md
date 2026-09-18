@@ -1,43 +1,116 @@
-# Astro Starter Kit: Minimal
+<p align="center">
+  <a href="https://catchbug.bikinan.id">
+    <img src="public/128.png" width="96" height="96" alt="CatchBug Logo" />
+  </a>
+</p>
 
-```sh
-pnpm create astro@latest -- --template minimal
+<h1 align="center">CatchBug Web</h1>
+
+<p align="center">
+  <strong>Official marketing website & technical documentation for the CatchBug Chrome Extension.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/bikinan/catch-bug-web/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" /></a>
+  <a href="https://astro.build"><img src="https://img.shields.io/badge/Built%20with-Astro%20v7-BC52EE.svg" alt="Built with Astro" /></a>
+  <a href="https://github.com/bikinan/catch-bug"><img src="https://img.shields.io/badge/Extension-CatchBug-6bf99c.svg" alt="CatchBug Extension" /></a>
+</p>
+
+---
+
+## ⚡ Overview
+
+[CatchBug](https://github.com/bikinan/catch-bug) turns 5 minutes of tedious bug reporting into a 3-second, one-click diagnostic dispatch.
+
+This repository powers **CatchBug's web presence**, including:
+
+- **Interactive Landing Page**: Featuring an authentic live simulator of the CatchBug avionics cockpit panel, real-time error synthesis, and zero-dependency smooth scroll.
+- **Comprehensive Technical Documentation**: Fast, accessible guides covering Manifest V3 architecture, zero-credential masking audits, step-by-step installation, and troubleshooting.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Astro 7](https://astro.build) (Static Site Generation / Content Collections)
+- **Styling**: Vanilla CSS Design Tokens (Bioluminescent Avionics Palette, zero Tailwind overhead)
+- **Smooth Scroll & Animation**: [Lenis](https://github.com/darkroomengineering/lenis) + GPU-accelerated CSS `translate3d`
+- **Typography**: Self-hosted via `@fontsource/syne` and `@fontsource/inter`
+- **Package Manager**: [pnpm](https://pnpm.io)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js**: `>= 22.12.0`
+- **pnpm**: `>= 9.0.0`
+
+### Installation & Local Development
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/bikinan/catch-bug-web.git
+cd catch-bug-web
+
+# 2. Install dependencies
+pnpm install
+
+# 3. Start local development server
+pnpm dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Visit [`http://localhost:4321`](http://localhost:4321) in your browser.
 
-## 🚀 Project Structure
+### Building for Production
 
-Inside of your Astro project, you'll see the following folders and files:
+```bash
+# Type-check and generate static production bundle in dist/
+pnpm build
+
+# Preview production build locally
+pnpm preview
+```
+
+---
+
+## 📁 Project Structure
 
 ```text
-/
-├── public/
+catch-bug-web/
+├── public/                 # Static assets, logos, favicons
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/
+│   │   ├── atoms/          # Primitive buttons, badges, icons, prose
+│   │   ├── molecules/      # Bento cards, action groups, telemetry headers
+│   │   └── organisms/      # HeaderNav, HeroSection, BentoGrid, ContrastMatrix, SiteFooter
+│   ├── content/
+│   │   └── docs/           # Markdown articles for /docs/* routes
+│   ├── layouts/
+│   │   ├── BaseLayout.astro # Base HTML layout with tokens & Lenis
+│   │   └── DocsLayout.astro # Documentation layout with sidebar & TOC
+│   ├── lib/
+│   │   └── lenis.ts        # Shared Lenis smooth-scroll singleton
+│   ├── pages/              # Astro file-based routing
+│   └── styles/
+│       └── tokens.css      # Design system CSS custom properties
+├── .github/                # Issue & PR templates
+├── CONTRIBUTING.md         # Guidelines for contributing
+├── LICENSE                 # MIT License
+└── README.md
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+---
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## 🤝 Contributing
 
-Any static assets, like images, can be placed in the `public/` directory.
+Contributions to the website, design polish, and documentation are warmly welcomed!
+Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
 
-## 🧞 Commands
+---
 
-All commands are run from the root of the project, from a terminal:
+## 📄 License
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Distributed under the **MIT License**. See [LICENSE](LICENSE) for more information.
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Crafted with care by [Bikinan Studio](https://bikinan.id).

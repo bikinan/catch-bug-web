@@ -1,0 +1,410 @@
+---
+import Icon from "../atoms/Icon.astro";
+import StatusDot from "../atoms/StatusDot.astro";
+import PrivacyBadge from "../molecules/PrivacyBadge.astro";
+import FooterNavGroup from "../molecules/FooterNavGroup.astro";
+
+const productLinks = [
+  { label: "Features", href: "/#features" },
+  { label: "Comparison Matrix", href: "/#comparison" },
+  { label: "MV3 Architecture", href: "/docs/architecture" },
+  { label: "Documentation", href: "/docs" },
+];
+
+const docsLinks = [
+  { label: "Installation Guide", href: "/docs/installation" },
+  {
+    label: "Verification Checklist",
+    href: "/docs/installation#verification-checklist",
+  },
+  {
+    label: "Permissions Audit",
+    href: "/docs/security-and-privacy#manifest-v3-permissions-audit",
+  },
+  { label: "Updating Extension", href: "/docs/updating" },
+  { label: "FAQs & Troubleshooting", href: "/docs/troubleshooting" },
+];
+
+const ecosystemLinks = [
+  {
+    label: "GitHub Repository",
+    href: "https://github.com/bikinan/catch-bug",
+    isExternal: true,
+    icon: "github" as const,
+  },
+  {
+    label: "Issue Tracker",
+    href: "https://github.com/bikinan/catch-bug/issues",
+    isExternal: true,
+  },
+  {
+    label: "Chrome Web Store",
+    href: "/docs/installation",
+    badge: "Coming Soon",
+  },
+  {
+    label: "Security & Privacy Policy",
+    href: "/docs/security-and-privacy",
+  },
+  {
+    label: "MIT License",
+    href: "https://github.com/bikinan/catch-bug/blob/main/LICENSE",
+    isExternal: true,
+  },
+];
+---
+
+<footer class="site-footer" id="site-footer" aria-label="Site Footer">
+  <div class="container footer-container">
+    <!-- Top Main Section: Brand & Nav Columns -->
+    <div class="footer-main-grid">
+      <!-- Brand & Mission Column -->
+      <div class="footer-brand-column">
+        <a href="/" class="footer-brand" aria-label="CatchBug Home">
+          <div class="brand-icon-box">
+            <img
+              src="/32.png"
+              srcset="/16.png 16w, /32.png 32w, /48.png 48w, /96.png 96w, /128.png 128w"
+              sizes="24px"
+              alt="CatchBug Logo"
+              width="24"
+              height="24"
+              class="footer-logo-img"
+            />
+          </div>
+          <span class="brand-name">CatchBug</span>
+          <span class="brand-badge">MV3</span>
+        </a>
+
+        <p class="brand-tagline">
+          Zero-friction diagnostic capture cockpit for modern web applications.
+          Automated network interception, credential scrubbing, and one-click
+          GitHub dispatch.
+        </p>
+
+        <!-- Live Privacy Assurance Badge Molecule -->
+        <div class="footer-privacy-wrap">
+          <PrivacyBadge />
+        </div>
+      </div>
+
+      <!-- Navigation Columns -->
+      <div class="footer-links-grid">
+        <FooterNavGroup title="Product" links={productLinks} />
+        <FooterNavGroup title="Docs & Guides" links={docsLinks} />
+        <FooterNavGroup title="Ecosystem & Legal" links={ecosystemLinks} />
+      </div>
+    </div>
+
+    <!-- Bottom Bar: Status, Copyright, and Back-to-Top -->
+    <div class="footer-bottom-bar">
+      <div class="bottom-left">
+        <p class="copyright-text">
+          &copy; {new Date().getFullYear()} CatchBug. Open-source under MIT License.
+          Crafted with care by <a
+            href="https://bikinan.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="credit-link">Bikinan Studio</a
+          >.
+        </p>
+      </div>
+
+      <div class="bottom-right">
+        <!-- Live Engine Status Indicator -->
+        <div class="footer-status-indicator" role="status">
+          <StatusDot color="mint" pulse={true} size={6} />
+          <span class="status-label">MV3 Engine Operational</span>
+          <span class="version-tag">v0.1.0</span>
+        </div>
+
+        <a
+          href="#top"
+          class="back-to-top-btn"
+          aria-label="Scroll back to top of page"
+          id="footer-back-to-top"
+        >
+          <span>Back to top</span>
+          <span class="arrow-up" aria-hidden="true">&uarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  import { getLenis } from '../../lib/lenis';
+
+  function setupBackToTop() {
+    const btn = document.getElementById("footer-back-to-top");
+    if (!btn) return;
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.scrollTo(0, { duration: 1.5 });
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    });
+  }
+
+  setupBackToTop();
+  document.addEventListener("astro:page-load", setupBackToTop);
+</script>
+
+<style>
+  .site-footer {
+    background-color: var(--color-void, #06090e);
+    border-top: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+    position: relative;
+    overflow-x: clip;
+    margin-top: auto;
+  }
+
+  .footer-container {
+    padding-top: clamp(3rem, 6vw, 5rem);
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    width: 100%;
+    max-width: var(--container-max-width, 1200px);
+    margin: 0 auto;
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 640px) {
+    .footer-container {
+      padding-left: var(--space-lg);
+      padding-right: var(--space-lg);
+    }
+  }
+
+  /* Main Grid */
+  .footer-main-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    .footer-main-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  /* Brand Column */
+  .footer-brand-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+
+  .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-text-primary, #f0fdf4);
+  }
+
+  .brand-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background-color: var(--color-primary-subtle, rgba(107, 249, 156, 0.1));
+    border: 1px solid rgba(107, 249, 156, 0.25);
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary, #f0fdf4);
+  }
+
+  .brand-badge {
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: var(--radius-full, 9999px);
+    background: rgba(107, 249, 156, 0.15);
+    color: var(--color-mint, #6bf99c);
+    border: 1px solid rgba(107, 249, 156, 0.3);
+  }
+
+  .brand-tagline {
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #94a3b8);
+    margin: 0;
+    max-width: 42ch;
+  }
+
+  .footer-privacy-wrap {
+    width: 100%;
+    max-width: 480px;
+    min-width: 0;
+  }
+
+  /* Links Grid */
+  .footer-links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  @media (max-width: 640px) {
+    .footer-links-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.25rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .footer-links-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  /* Bottom Bar */
+  .footer-bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .bottom-left {
+    min-width: 0;
+  }
+
+  .copyright-text {
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #64748b);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .credit-link {
+    color: var(--color-text-secondary, #94a3b8);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.2);
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .credit-link:hover {
+    color: var(--color-mint, #6bf99c);
+    border-color: var(--color-mint, #6bf99c);
+  }
+
+  .bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 10px;
+    border-radius: var(--radius-full, 9999px);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .status-label {
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary, #94a3b8);
+  }
+
+  .version-tag {
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.75rem;
+    color: var(--color-mint, #6bf99c);
+    padding-left: 4px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .back-to-top-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary, #94a3b8);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm, 6px);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.04));
+    transition: all var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .back-to-top-btn:hover {
+    color: var(--color-text-primary, #f0fdf4);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .arrow-up {
+    font-size: 0.75rem;
+    color: var(--color-mint, #6bf99c);
+    transition: transform var(--transition-fast);
+  }
+
+  .back-to-top-btn:hover .arrow-up {
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 640px) {
+    .footer-bottom-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .bottom-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

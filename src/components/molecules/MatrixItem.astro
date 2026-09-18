@@ -1,0 +1,215 @@
+---
+import Icon from '../atoms/Icon.astro';
+
+interface Props {
+  status: 'fail' | 'success';
+  stepNumber: string;
+  title: string;
+  description: string;
+  timeEstimate: string;
+  codeSnippet?: string;
+}
+
+const {
+  status,
+  stepNumber,
+  title,
+  description,
+  timeEstimate,
+  codeSnippet,
+} = Astro.props;
+
+const isSuccess = status === 'success';
+---
+
+<div class={`matrix-item ${isSuccess ? 'item-success' : 'item-fail'}`}>
+  <div class="item-header">
+    <div class="item-icon-badge">
+      {isSuccess ? (
+        <Icon name="check" size={16} />
+      ) : (
+        <Icon name="x" size={16} />
+      )}
+    </div>
+    <span class="step-num">{stepNumber}</span>
+    <span class="time-badge">{timeEstimate}</span>
+  </div>
+
+  <div class="item-body">
+    <h4 class="item-title">{title}</h4>
+    <p class="item-desc">{description}</p>
+
+    {codeSnippet && (
+      <div class="item-code-box">
+        <code>{codeSnippet}</code>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .matrix-item {
+    position: relative;
+    padding: clamp(1rem, 2.5vw, 1.25rem);
+    border-radius: var(--radius-lg, 16px);
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-border);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .matrix-item:hover {
+    transform: translateY(-2px);
+  }
+
+  .item-fail {
+    border-color: rgba(244, 63, 94, 0.2);
+    background: rgba(17, 26, 39, 0.6);
+  }
+
+  .item-fail:hover {
+    border-color: rgba(244, 63, 94, 0.4);
+    box-shadow: 0 4px 20px rgba(244, 63, 94, 0.08);
+  }
+
+  .item-success {
+    border-color: rgba(107, 249, 156, 0.2);
+    background: rgba(17, 26, 39, 0.85);
+  }
+
+  .item-success:hover {
+    border-color: rgba(107, 249, 156, 0.45);
+    box-shadow: 0 4px 24px rgba(107, 249, 156, 0.12);
+  }
+
+  .item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .item-icon-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .item-fail .item-icon-badge {
+    background: rgba(244, 63, 94, 0.15);
+    color: var(--color-crimson, #f43f5e);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+  }
+
+  .item-success .item-icon-badge {
+    background: rgba(107, 249, 156, 0.15);
+    color: var(--color-mint);
+    border: 1px solid rgba(107, 249, 156, 0.3);
+  }
+
+  .step-num {
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .time-badge {
+    margin-left: auto;
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .item-fail .time-badge {
+    background: rgba(244, 63, 94, 0.1);
+    color: var(--color-crimson, #f43f5e);
+    border: 1px solid rgba(244, 63, 94, 0.2);
+  }
+
+  .item-success .time-badge {
+    background: rgba(107, 249, 156, 0.1);
+    color: var(--color-mint);
+    border: 1px solid rgba(107, 249, 156, 0.25);
+  }
+
+  .item-body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .item-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 0.35rem 0;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .item-desc {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0 0 0.75rem 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .item-code-box {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    background: rgba(6, 9, 14, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  }
+
+  .item-code-box::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .item-code-box::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .item-code-box::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-sm, 6px);
+  }
+
+  .item-code-box code {
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .item-fail .item-code-box code {
+    color: var(--color-crimson, #f43f5e);
+  }
+
+  .item-success .item-code-box code {
+    color: var(--color-mint);
+  }
+</style>

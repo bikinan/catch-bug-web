@@ -1,0 +1,100 @@
+---
+import Icon from '../atoms/Icon.astro';
+
+interface ProofItem {
+  icon: 'zap' | 'shield' | 'terminal' | 'sparkles';
+  stat: string;
+  label: string;
+}
+
+const proofPoints: ProofItem[] = [
+  {
+    icon: 'zap',
+    stat: '3 Seconds',
+    label: 'vs 5 min manual report'
+  },
+  {
+    icon: 'terminal',
+    stat: '0 DevTools',
+    label: 'Auto-intercepted telemetry'
+  },
+  {
+    icon: 'shield',
+    stat: '100% Masked',
+    label: 'Zero-credential leaks'
+  },
+  {
+    icon: 'sparkles',
+    stat: 'BYOK AI',
+    label: 'Automated root cause triage'
+  }
+];
+---
+
+<div class="proof-bar">
+  {proofPoints.map((item) => (
+    <div class="proof-item">
+      <div class="proof-icon-box">
+        <Icon name={item.icon} size={16} />
+      </div>
+      <div class="proof-content">
+        <span class="proof-stat">{item.stat}</span>
+        <span class="proof-label">{item.label}</span>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .proof-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  @media (min-width: 640px) {
+    .proof-bar {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .proof-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .proof-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-primary-subtle);
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+
+  .proof-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .proof-stat {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+  }
+
+  .proof-label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+</style>

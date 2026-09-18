@@ -1,0 +1,1088 @@
+---
+import MatrixItem from "../molecules/MatrixItem.astro";
+import Icon from "../atoms/Icon.astro";
+---
+
+<section class="contrast-section" id="comparison" aria-label="Contrast Matrix">
+  <!-- Atmospheric Avionics Ambient Backlight -->
+  <div class="contrast-ambient-glow" aria-hidden="true"></div>
+
+  <div class="container">
+    <!-- Section Header (No Eyebrow / Kicker per Impeccable Craft Floor) -->
+    <div class="section-header">
+      <h2 class="section-headline">
+        The 8-minute manual bug report is dead.<br />
+        <span class="mint-accent"
+          >Replace it with a 3-second diagnostic dispatch.</span
+        >
+      </h2>
+      <p class="section-subtext">
+        See the brutal difference between scrambling through DevTools to
+        manually assemble bug tickets and CatchBug's automated, client-sanitized
+        triage cockpit.
+      </p>
+    </div>
+
+    <!-- Mobile Flow Switcher (Visible only on mobile/tablet < 900px) -->
+    <div
+      class="mobile-flow-switcher"
+      role="tablist"
+      aria-label="Comparison Flow Selection"
+    >
+      <button
+        type="button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-manual-flow"
+        id="tab-manual-flow"
+        class="flow-tab-btn tab-btn-manual"
+        data-flow="manual"
+      >
+        <span class="flow-tab-indicator indicator-fail"></span>
+        <Icon name="x-circle" size={16} />
+        <span>Manual QA (7m 45s)</span>
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel-catchbug-flow"
+        id="tab-catchbug-flow"
+        class="flow-tab-btn tab-btn-catchbug is-active"
+        data-flow="catchbug"
+      >
+        <span class="flow-tab-indicator indicator-success"></span>
+        <Icon name="zap" size={16} />
+        <span>CatchBug Flow (3.2s)</span>
+      </button>
+    </div>
+
+    <!-- Dual-Column Comparison Matrix -->
+    <div class="matrix-grid" data-active-flow="catchbug">
+      <!-- Column A: Traditional Manual Reporting -->
+      <div
+        class="matrix-column column-manual"
+        id="panel-manual-flow"
+        role="tabpanel"
+        aria-labelledby="tab-manual-flow"
+      >
+        <div class="column-header">
+          <div class="column-title-group">
+            <div class="column-badge-icon badge-fail">
+              <Icon name="x-circle" size={20} />
+            </div>
+            <div>
+              <h3 class="column-title">Traditional Manual QA</h3>
+              <p class="column-subtitle">
+                DevTools archaeology & manual assembly
+              </p>
+            </div>
+          </div>
+          <div class="time-summary-pill pill-fail">
+            <span class="pill-dot dot-fail"></span>
+            <Icon name="clock" size={14} />
+            <span>~7m 45s elapsed</span>
+          </div>
+        </div>
+
+        <div class="matrix-items-list">
+          <MatrixItem
+            status="fail"
+            stepNumber="01"
+            title="DevTools Network Archaeology"
+            description="Manually open DevTools, scroll through 120+ asset requests, filter by XHR/Fetch, and attempt to spot the failed request."
+            timeEstimate="+1m 30s"
+            codeSnippet="Network tab: 142 requests • 4.8MB transferred • Hunting..."
+          />
+
+          <MatrixItem
+            status="fail"
+            stepNumber="02"
+            title="Snipping Tool Screenshot & Crop"
+            description="Alt-tab to external screenshot utility, crop the modal error, and save an unannotated image file to your desktop folder."
+            timeEstimate="+1m 15s"
+            codeSnippet="Screenshot_2026-09-17_12.png (Unedited, no console context)"
+          />
+
+          <MatrixItem
+            status="fail"
+            stepNumber="03"
+            title="Accidental Credential Exposure"
+            description="Copy-paste raw headers into Jira or Slack; inadvertently leak staging Bearer tokens or session cookies into team channels."
+            timeEstimate="High Risk"
+            codeSnippet="Authorization: Bearer eyJhbGciOiJIUzI1... [LEAKED TO SLACK]"
+          />
+
+          <MatrixItem
+            status="fail"
+            stepNumber="04"
+            title="Fuzzy Memory Reproduction Steps"
+            description="Type out reproduction steps from memory: 'I think I clicked the dropdown twice, then entered the discount code, then submit failed.'"
+            timeEstimate="+2m 00s"
+            codeSnippet="Repro: 'Sometimes fails on checkout, not sure exact sequence'"
+          />
+
+          <MatrixItem
+            status="fail"
+            stepNumber="05"
+            title="Jira Formatting & Back-and-Forth"
+            description="Paste broken JSON into Jira. Wait 4 hours for an engineer to comment: 'Cannot reproduce locally. What was the API payload?'"
+            timeEstimate="+3m 00s"
+            codeSnippet="Comment from Dev: 'Works on my machine. Closing as Incomplete.'"
+          />
+        </div>
+
+        <div class="column-footer footer-fail">
+          <div class="footer-stat">
+            <span class="footer-stat-label">Total Time Wasted</span>
+            <span class="footer-stat-val text-fail">7m 45s</span>
+          </div>
+          <div class="footer-stat-meta">
+            <span
+              >High security risk &bull; Missing network state &bull; Delayed
+              fixes</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Column B: CatchBug Automated Flow -->
+      <div
+        class="matrix-column column-catchbug"
+        id="panel-catchbug-flow"
+        role="tabpanel"
+        aria-labelledby="tab-catchbug-flow"
+      >
+        <div class="column-header">
+          <div class="column-title-group">
+            <div class="column-badge-icon badge-success">
+              <Icon name="zap" size={20} />
+            </div>
+            <div>
+              <h3 class="column-title">CatchBug In-Browser Flow</h3>
+              <p class="column-subtitle">
+                Zero DevTools tabs &bull; 100% automated capture
+              </p>
+            </div>
+          </div>
+          <div class="time-summary-pill pill-success">
+            <span class="pill-dot dot-success"></span>
+            <Icon name="clock" size={14} />
+            <span>3.2s total dispatch</span>
+          </div>
+        </div>
+
+        <div class="matrix-items-list">
+          <MatrixItem
+            status="success"
+            stepNumber="01"
+            title="Deep Network & Console Interception"
+            description="Background observer auto-captures failing HTTP 500 status, request payload, response body, and console exception in real time."
+            timeEstimate="0.0s (Auto)"
+            codeSnippet="[INTERCEPTED] 500 POST /api/v1/checkout (142ms latency)"
+          />
+
+          <MatrixItem
+            status="success"
+            stepNumber="02"
+            title="Zero-Credential Client Scrubber"
+            description="Pre-flight regex scrubber automatically masks Bearer tokens, cookies, API keys, and passwords before data leaves your browser."
+            timeEstimate="0.1s (Auto)"
+            codeSnippet="Authorization: Bearer ******************** [MASKED]"
+          />
+
+          <MatrixItem
+            status="success"
+            stepNumber="03"
+            title="DOM Action Breadcrumbs Sequence"
+            description="Auto-logs the exact chain of user interactions: clicks, input entries, and route changes with millisecond timestamps."
+            timeEstimate="0.0s (Auto)"
+            codeSnippet="Breadcrumbs: button#checkout → input#promo → Error 500"
+          />
+
+          <MatrixItem
+            status="success"
+            stepNumber="04"
+            title="BYOK AI Root Cause Analysis"
+            description="Gemini 2.5 Flash analyzes the payload and stack trace, identifying the missing null check before dispatching the ticket."
+            timeEstimate="1.2s (AI)"
+            codeSnippet="AI Diagnosis: Missing null check on payload.coupon.code"
+          />
+
+          <MatrixItem
+            status="success"
+            stepNumber="05"
+            title="1-Click GitHub / Slack Dispatch"
+            description="Generates a structured, beautifully formatted Markdown issue complete with OS, browser version, viewport, and sanitized logs."
+            timeEstimate="1.9s (Click)"
+            codeSnippet="[DISPATCHED] GitHub Issue #482 created with diagnostic bundle"
+          />
+        </div>
+
+        <div class="column-footer footer-success">
+          <div class="footer-stat">
+            <span class="footer-stat-label">Total Time Required</span>
+            <span class="footer-stat-val text-success">3.2s</span>
+          </div>
+          <div class="footer-stat-meta">
+            <span
+              >Zero credential leaks &bull; 100% reproducible &bull; Instant
+              resolution</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Velocity Sprint Impact Bar -->
+    <div class="velocity-impact-bar">
+      <div class="impact-lead">
+        <div class="impact-icon-wrap">
+          <Icon name="activity" size={24} />
+        </div>
+        <div>
+          <h4 class="impact-title">Sprint Productivity Multiplier</h4>
+          <p class="impact-sub">
+            Based on an average engineering squad triaging 20 bug reports per
+            sprint.
+          </p>
+        </div>
+      </div>
+
+      <div class="impact-metrics-group">
+        <div class="impact-metric">
+          <span class="metric-num text-success">98.4%</span>
+          <span class="metric-label">Reporting Time Saved</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="impact-metric">
+          <span class="metric-num text-success">0</span>
+          <span class="metric-label">DevTools Tabs Opened</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="impact-metric">
+          <span class="metric-num text-teal">100%</span>
+          <span class="metric-label">Reproduction Rate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contrast-section {
+    padding: clamp(80px, 10vw, 120px) 0;
+    background: var(--color-void);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Atmospheric Avionics Ambient Glow */
+  .contrast-ambient-glow {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70vw;
+    height: 50vw;
+    max-width: 900px;
+    max-height: 600px;
+    border-radius: var(--radius-full, 9999px);
+    background: radial-gradient(
+      circle,
+      rgba(107, 249, 156, 0.04) 0%,
+      rgba(3, 169, 163, 0.03) 35%,
+      rgba(244, 63, 94, 0.02) 65%,
+      transparent 80%
+    );
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding: 0 var(--space-lg);
+    }
+  }
+
+  /* Section Header */
+  .section-header {
+    text-align: center;
+    max-width: 840px;
+    margin: 0 auto clamp(3rem, 5vw, 4.5rem) auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .contrast-section.header-revealed .section-header {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-headline {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+    text-wrap: balance;
+  }
+
+  .mint-accent {
+    color: var(--color-mint);
+  }
+
+  .section-subtext {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 68ch;
+  }
+
+  /* Mobile Flow Segmented Switcher */
+  .mobile-flow-switcher {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 4px;
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+  }
+
+  .contrast-section.header-revealed .mobile-flow-switcher {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .flow-tab-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 10px;
+    min-height: 42px;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 380px) {
+    .flow-tab-btn {
+      padding: 6px 8px;
+      font-size: 0.75rem;
+      gap: 4px;
+    }
+  }
+
+  .flow-tab-btn:hover {
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .flow-tab-btn.is-active.tab-btn-manual {
+    background: rgba(244, 63, 94, 0.15);
+    border-color: rgba(244, 63, 94, 0.35);
+    color: var(--color-crimson, #f43f5e);
+  }
+
+  .flow-tab-btn.is-active.tab-btn-catchbug {
+    background: rgba(107, 249, 156, 0.15);
+    border-color: rgba(107, 249, 156, 0.35);
+    color: var(--color-mint);
+  }
+
+  .flow-tab-indicator {
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .indicator-fail {
+    background-color: var(--color-crimson, #f43f5e);
+  }
+
+  .indicator-success {
+    background-color: var(--color-mint);
+    box-shadow: 0 0 6px rgba(107, 249, 156, 0.6);
+  }
+
+  .flow-tab-btn.is-active .flow-tab-indicator {
+    animation: indicatorPulse 1.5s infinite ease-in-out;
+  }
+
+  @keyframes indicatorPulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes matrixPanelFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Dual-Column Matrix */
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 899px) {
+    .mobile-flow-switcher {
+      display: flex;
+    }
+
+    .matrix-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+
+    .matrix-grid[data-active-flow="catchbug"] .column-manual {
+      display: none !important;
+    }
+
+    .matrix-grid[data-active-flow="catchbug"] .column-catchbug {
+      display: flex !important;
+      animation: matrixPanelFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .matrix-grid[data-active-flow="manual"] .column-catchbug {
+      display: none !important;
+    }
+
+    .matrix-grid[data-active-flow="manual"] .column-manual {
+      display: flex !important;
+      animation: matrixPanelFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  }
+
+  .matrix-column {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    padding: clamp(1.125rem, 3.5vw, 1.75rem);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-card);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .contrast-section.grid-revealed .matrix-column {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  :global(.matrix-items-list .matrix-item) {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+    transition-delay:
+      calc(var(--item-idx, 0) * 60ms + 100ms),
+      calc(var(--item-idx, 0) * 60ms + 100ms), 0ms, 0ms;
+    will-change: opacity, transform;
+  }
+
+  .contrast-section.grid-revealed :global(.matrix-items-list .matrix-item) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 480px) {
+    .matrix-column {
+      padding: 1rem 0.875rem;
+      border-radius: var(--radius-md, 10px);
+    }
+  }
+
+  .column-manual {
+    border-color: rgba(244, 63, 94, 0.25);
+    background: linear-gradient(
+      180deg,
+      rgba(244, 63, 94, 0.04) 0%,
+      rgba(11, 16, 23, 0.95) 100%
+    );
+  }
+
+  .column-catchbug {
+    border-color: rgba(107, 249, 156, 0.3);
+    background: linear-gradient(
+      180deg,
+      rgba(107, 249, 156, 0.05) 0%,
+      rgba(11, 16, 23, 0.95) 100%
+    );
+    box-shadow:
+      0 8px 32px rgba(6, 9, 14, 0.6),
+      0 0 20px rgba(107, 249, 156, 0.05);
+  }
+
+  /* Column Header */
+  .column-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 768px) {
+    .column-header {
+      flex-direction: column;
+    }
+  }
+
+  .column-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .column-badge-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .badge-fail {
+    background: rgba(244, 63, 94, 0.15);
+    color: var(--color-crimson, #f43f5e);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+  }
+
+  .badge-success {
+    background: rgba(107, 249, 156, 0.15);
+    color: var(--color-mint);
+    border: 1px solid rgba(107, 249, 156, 0.35);
+  }
+
+  .column-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  @media (max-width: 480px) {
+    .column-title {
+      font-size: 1rem;
+    }
+    .column-subtitle {
+      font-size: 0.75rem;
+    }
+  }
+
+  .column-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    word-break: break-word;
+  }
+
+  .time-summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .time-summary-pill {
+      margin: 0 auto;
+    }
+  }
+
+  .pill-fail {
+    background: rgba(244, 63, 94, 0.12);
+    color: var(--color-crimson, #f43f5e);
+    border: 1px solid rgba(244, 63, 94, 0.25);
+  }
+
+  .pill-success {
+    background: rgba(107, 249, 156, 0.12);
+    color: var(--color-mint);
+    border: 1px solid rgba(107, 249, 156, 0.3);
+  }
+
+  /* List of items */
+  .matrix-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  /* Column Footer */
+  .column-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .footer-stat {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-stat-label {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .footer-stat-val {
+    font-family: var(--font-code);
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .text-fail {
+    color: var(--color-crimson, #f43f5e);
+  }
+
+  .text-success {
+    color: var(--color-mint);
+  }
+
+  .text-teal {
+    color: var(--color-teal);
+  }
+
+  .footer-stat-meta {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Bottom Velocity Sprint Bar */
+  .velocity-impact-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    background: rgba(17, 26, 39, 0.7);
+    border: 1px solid rgba(3, 169, 163, 0.3);
+    backdrop-filter: blur(12px);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .contrast-section.impact-revealed .velocity-impact-bar {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    .velocity-impact-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.25rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .velocity-impact-bar {
+      padding: 1rem 0.875rem;
+      border-radius: var(--radius-md, 10px);
+    }
+  }
+
+  .impact-lead {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .impact-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(3, 169, 163, 0.15);
+    color: var(--color-teal);
+    border: 1px solid rgba(3, 169, 163, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .impact-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.2rem 0;
+    word-break: break-word;
+  }
+
+  .impact-sub {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    word-break: break-word;
+  }
+
+  .impact-metrics-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 580px) {
+    .impact-metrics-group {
+      width: 100%;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .impact-metrics-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    .impact-metrics-group .metric-divider {
+      display: none;
+    }
+    .impact-metric {
+      align-items: center !important;
+    }
+    .metric-label {
+      white-space: normal !important;
+      text-align: center;
+      line-height: 1.2;
+    }
+  }
+
+  .impact-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  @media (max-width: 580px) {
+    .impact-metric {
+      align-items: flex-start;
+    }
+  }
+
+  .metric-num {
+    font-family: var(--font-code);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .metric-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    display: inline-block;
+  }
+
+  .dot-fail {
+    background-color: var(--color-crimson, #f43f5e);
+  }
+
+  .dot-success {
+    background-color: var(--color-mint);
+    box-shadow: 0 0 6px var(--color-mint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contrast-ambient-glow {
+      filter: blur(40px);
+      opacity: 0.3;
+      transform: translateX(-50%) !important;
+    }
+
+    .section-header,
+    .mobile-flow-switcher,
+    .matrix-column,
+    .velocity-impact-bar,
+    :global(.matrix-items-list .matrix-item) {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
+  }
+</style>
+
+<script>
+  import { getLenis } from "../../lib/lenis";
+
+  function setupMatrixSwitcher() {
+    const switcher = document.querySelector(".mobile-flow-switcher");
+    const grid = document.querySelector(".matrix-grid");
+    if (!switcher || !grid) return;
+
+    if (switcher.getAttribute("data-initialized") === "true") return;
+    switcher.setAttribute("data-initialized", "true");
+
+    const tabButtons =
+      switcher.querySelectorAll<HTMLButtonElement>(".flow-tab-btn");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const flow = btn.getAttribute("data-flow");
+        if (!flow) return;
+
+        grid.setAttribute("data-active-flow", flow);
+
+        tabButtons.forEach((b) => {
+          const isActive = b.getAttribute("data-flow") === flow;
+          b.classList.toggle("is-active", isActive);
+          b.setAttribute("aria-selected", isActive ? "true" : "false");
+        });
+      });
+    });
+  }
+
+  function setupContrastScroll() {
+    const section = document.getElementById("comparison");
+    if (!section) return;
+
+    const header = section.querySelector(".section-header");
+    const grid = section.querySelector(".matrix-grid");
+    const impactBar = section.querySelector<HTMLElement>(".velocity-impact-bar");
+    const glow = section.querySelector<HTMLElement>(".contrast-ambient-glow");
+
+    // Assign stagger indices to items in both columns
+    const manualItems = section.querySelectorAll<HTMLElement>(
+      ".column-manual .matrix-item",
+    );
+    manualItems.forEach((item, idx) => {
+      item.style.setProperty("--item-idx", idx.toString());
+    });
+
+    const catchbugItems = section.querySelectorAll<HTMLElement>(
+      ".column-catchbug .matrix-item",
+    );
+    catchbugItems.forEach((item, idx) => {
+      item.style.setProperty("--item-idx", idx.toString());
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === header) {
+              section.classList.add("header-revealed");
+            } else if (entry.target === grid) {
+              section.classList.add("grid-revealed");
+            } else if (entry.target === impactBar) {
+              section.classList.add("impact-revealed");
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+    );
+
+    if (header) observer.observe(header);
+    if (grid) observer.observe(grid);
+    if (impactBar) observer.observe(impactBar);
+
+    // Connect with Lenis scroll for high-performance bipolar differential parallax
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    const manualCol = section.querySelector<HTMLElement>(".column-manual");
+    const catchbugCol = section.querySelector<HTMLElement>(".column-catchbug");
+
+    let secTop = section.offsetTop;
+    let secHeight = section.offsetHeight;
+    let winHeight = window.innerHeight;
+
+    function updateMetrics() {
+      if (!section) return;
+      secTop = section.offsetTop;
+      secHeight = section.offsetHeight;
+      winHeight = window.innerHeight;
+    }
+
+    const ro = new ResizeObserver(() => updateMetrics());
+    ro.observe(section);
+    window.addEventListener("resize", updateMetrics, { passive: true });
+
+    function handleScroll(scroll: number) {
+      if (!section) return;
+      const visibleStart = secTop - winHeight;
+      const visibleEnd = secTop + secHeight;
+
+      if (scroll >= visibleStart && scroll <= visibleEnd) {
+        const progress = (scroll - visibleStart) / (secHeight + winHeight);
+        const centeredProgress = progress - 0.5;
+
+        if (glow) {
+          glow.style.transform = `translate3d(-50%, ${(centeredProgress * 60).toFixed(1)}px, 0)`;
+        }
+
+        // Bipolar differential float on desktop (>= 1024px)
+        if (window.innerWidth >= 1024) {
+          if (manualCol) {
+            manualCol.style.transform = `translate3d(0, ${(centeredProgress * -20).toFixed(1)}px, 0)`;
+          }
+          if (catchbugCol) {
+            catchbugCol.style.transform = `translate3d(0, ${(centeredProgress * 25).toFixed(1)}px, 0)`;
+          }
+          if (impactBar) {
+            impactBar.style.transform = `translate3d(0, ${(centeredProgress * 15).toFixed(1)}px, 0)`;
+          }
+        }
+      }
+    }
+
+    function attachLenisScroll() {
+      getLenis()?.on("scroll", (e) => handleScroll(e.scroll));
+    }
+
+    if (getLenis()) {
+      attachLenisScroll();
+    } else {
+      window.addEventListener("lenis:ready", attachLenisScroll, { once: true });
+    }
+  }
+
+  function init() {
+    setupMatrixSwitcher();
+    setupContrastScroll();
+  }
+
+  init();
+  document.addEventListener("astro:page-load", init);
+</script>

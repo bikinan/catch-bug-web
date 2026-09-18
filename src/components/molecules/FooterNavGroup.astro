@@ -1,0 +1,143 @@
+---
+import Icon from "../atoms/Icon.astro";
+
+interface NavLinkItem {
+  label: string;
+  href: string;
+  isExternal?: boolean;
+  badge?: string;
+  icon?:
+    | "github"
+    | "file-text"
+    | "shield"
+    | "terminal"
+    | "zap"
+    | "download"
+    | "external-link";
+}
+
+interface Props {
+  title: string;
+  links: NavLinkItem[];
+  class?: string;
+}
+
+const { title, links, class: className = "" } = Astro.props;
+---
+
+<div class={`footer-nav-group ${className}`}>
+  <h3 class="footer-group-title">{title}</h3>
+  <ul class="footer-links-list" role="list">
+    {
+      links.map((link) => (
+        <li class="footer-link-item">
+          <a
+            href={link.href}
+            target={link.isExternal ? "_blank" : undefined}
+            rel={link.isExternal ? "noopener noreferrer" : undefined}
+            class="footer-link"
+          >
+            {link.icon && (
+              <span class="link-icon">
+                <Icon name={link.icon} size={14} />
+              </span>
+            )}
+            <span class="link-label">{link.label}</span>
+            {link.isExternal && (
+              <span class="link-external-icon" aria-hidden="true">
+                <Icon name="external-link" size={11} />
+              </span>
+            )}
+            {link.badge && <span class="link-badge">{link.badge}</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .footer-nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .footer-group-title {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-primary, #f0fdf4);
+    margin: 0;
+  }
+
+  .footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .footer-link-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #94a3b8);
+    text-decoration: none;
+    transition:
+      color var(--transition-fast),
+      transform var(--transition-fast);
+    line-height: 1.4;
+  }
+
+  .footer-link:hover {
+    color: var(--color-mint, #6bf99c);
+    transform: translateX(2px);
+  }
+
+  .link-icon {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-muted, #64748b);
+    transition: color var(--transition-fast);
+  }
+
+  .footer-link:hover .link-icon {
+    color: var(--color-mint, #6bf99c);
+  }
+
+  .link-external-icon {
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+  }
+
+  .footer-link:hover .link-external-icon {
+    opacity: 1;
+  }
+
+  .link-badge {
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.5rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: var(--radius-full, 9999px);
+    background: rgba(3, 169, 163, 0.15);
+    color: var(--color-secondary, #03a9a3);
+    border: 1px solid rgba(3, 169, 163, 0.3);
+    line-height: 1;
+  }
+</style>

@@ -1,0 +1,152 @@
+---
+import Icon from '../atoms/Icon.astro';
+import StatusDot from '../atoms/StatusDot.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`privacy-badge ${className}`} role="status" aria-label="Privacy and Security Assurance">
+  <div class="badge-main">
+    <div class="badge-icon-wrap">
+      <Icon name="shield" size={16} />
+    </div>
+    <div class="badge-content">
+      <div class="badge-top-row">
+        <StatusDot color="mint" pulse={true} size={6} />
+        <span class="badge-label">100% In-Browser Privacy Engine</span>
+      </div>
+      <p class="badge-sub">Zero cloud tracking &bull; Zero data collected &bull; Local DOM sandbox</p>
+    </div>
+  </div>
+  <a href="/docs/security-and-privacy" class="badge-action" aria-label="Learn more about CatchBug privacy architecture">
+    <span>Audit Specs</span>
+    <Icon name="arrow-right" size={12} />
+  </a>
+</div>
+
+<style>
+  .privacy-badge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md, 10px);
+    background: rgba(17, 26, 39, 0.6);
+    border: 1px solid rgba(107, 249, 156, 0.2);
+    backdrop-filter: blur(12px);
+    width: 100%;
+    max-width: 480px;
+    min-width: 0;
+    box-sizing: border-box;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+  }
+
+  .privacy-badge:hover {
+    border-color: rgba(107, 249, 156, 0.35);
+    background: rgba(17, 26, 39, 0.85);
+  }
+
+  .badge-main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .badge-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm, 6px);
+    background: rgba(107, 249, 156, 0.12);
+    color: var(--color-mint, #6bf99c);
+    border: 1px solid rgba(107, 249, 156, 0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .badge-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .badge-top-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge-label {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #f0fdf4);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .badge-sub {
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #64748b);
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .badge-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-mint, #6bf99c);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm, 6px);
+    background: rgba(107, 249, 156, 0.08);
+    border: 1px solid rgba(107, 249, 156, 0.2);
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .badge-action:hover {
+    background: rgba(107, 249, 156, 0.16);
+    border-color: rgba(107, 249, 156, 0.4);
+    transform: translateX(2px);
+  }
+
+  @media (max-width: 480px) {
+    .privacy-badge {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.625rem;
+      padding: 0.75rem;
+    }
+
+    .badge-label {
+      font-size: 0.75rem;
+    }
+
+    .badge-sub {
+      white-space: normal;
+    }
+
+    .badge-action {
+      align-self: flex-start;
+    }
+  }
+</style>

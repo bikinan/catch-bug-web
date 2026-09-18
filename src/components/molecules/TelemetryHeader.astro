@@ -1,0 +1,103 @@
+---
+import Badge from '../atoms/Badge.astro';
+
+interface Props {
+  url?: string;
+  statusText?: string;
+}
+
+const {
+  url = 'https://staging.app/checkout/pay',
+  statusText = 'Interception Ready'
+} = Astro.props;
+---
+
+<div class="telemetry-header">
+  <div class="window-dots" aria-hidden="true">
+    <span class="dot dot-red"></span>
+    <span class="dot dot-amber"></span>
+    <span class="dot dot-green"></span>
+  </div>
+
+  <div class="address-bar">
+    <span class="lock-icon" aria-hidden="true">&#x1F512;</span>
+    <span class="url-text">{url}</span>
+  </div>
+
+  <Badge variant="teal" pulse size="sm" id="sandbox-status-badge">
+    {statusText}
+  </Badge>
+</div>
+
+<style>
+  .telemetry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: 12px 18px;
+    background-color: #0c121c;
+    border-bottom: 1px solid var(--color-border-subtle);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+  }
+
+  .window-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+
+  .dot-red {
+    background-color: #f43f5e;
+  }
+
+  .dot-amber {
+    background-color: #f59e0b;
+  }
+
+  .dot-green {
+    background-color: #10b981;
+  }
+
+  .address-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 320px;
+    padding: 4px 12px;
+    background-color: rgba(6, 9, 14, 0.7);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lock-icon {
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+
+  .url-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: 640px) {
+    .address-bar {
+      display: none;
+    }
+  }
+</style>

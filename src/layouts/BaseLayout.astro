@@ -1,0 +1,47 @@
+---
+import "../styles/tokens.css";
+import "lenis/dist/lenis.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "CatchBug — Zero-Friction Bug Reporting Chrome Extension",
+  description = "Turn 5 minutes of tedious bug reporting into a 3-second, one-click diagnostic dispatch. Automatic console interception, network telemetry, zero-credential masking, and instant GitHub dispatch.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/16.png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="/128.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph & Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      import { initLenis, destroyLenis } from "../lib/lenis";
+
+      initLenis();
+      document.addEventListener("astro:page-load", initLenis);
+      document.addEventListener("astro:before-swap", destroyLenis);
+    </script>
+  </body>
+</html>
