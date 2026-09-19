@@ -1,0 +1,68 @@
+---
+interface Props {
+  color?: 'mint' | 'crimson' | 'teal' | 'neutral';
+  pulse?: boolean;
+  size?: number;
+  class?: string;
+}
+
+const {
+  color = 'mint',
+  pulse = true,
+  size = 7,
+  class: className = ''
+} = Astro.props;
+---
+
+<span
+  class={`status-dot dot-${color} ${pulse ? 'is-pulsing' : ''} ${className}`}
+  style={`--dot-size: ${size}px;`}
+  aria-hidden="true"
+>
+</span>
+
+<style>
+  .status-dot {
+    width: var(--dot-size, 7px);
+    height: var(--dot-size, 7px);
+    border-radius: 9999px;
+    display: inline-block;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .dot-mint {
+    background-color: var(--color-mint, #6bf99c);
+    box-shadow: 0 0 6px rgba(107, 249, 156, 0.6);
+  }
+
+  .dot-teal {
+    background-color: var(--color-teal, #03a9a3);
+    box-shadow: 0 0 6px rgba(3, 169, 163, 0.5);
+  }
+
+  .dot-crimson {
+    background-color: var(--color-crimson, #f43f5e);
+    box-shadow: 0 0 6px rgba(244, 63, 94, 0.5);
+  }
+
+  .dot-neutral {
+    background-color: var(--color-text-muted, #64748b);
+    box-shadow: none;
+  }
+
+  .is-pulsing {
+    animation: statusPulse 2s infinite ease-in-out;
+  }
+
+  @keyframes statusPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.35);
+      opacity: 0.7;
+    }
+  }
+</style>

@@ -1,17 +1,21 @@
 ---
-
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeaderNav from "../components/organisms/HeaderNav.astro";
+import HeroSection from "../components/organisms/HeroSection.astro";
+import BentoGrid from "../components/organisms/BentoGrid.astro";
+import ContrastMatrix from "../components/organisms/ContrastMatrix.astro";
+import SiteFooter from "../components/organisms/SiteFooter.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="CatchBug - Zero-Friction Bug Reporting Chrome Extension"
+  description="Turn 5 minutes of tedious bug reporting into a 3-second, one-click diagnostic dispatch. Auto-captures failing endpoints, console errors, and click breadcrumbs with zero credential leaks."
+>
+  <HeaderNav />
+  <main id="main-content">
+    <HeroSection />
+    <BentoGrid />
+    <ContrastMatrix />
+  </main>
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,140 @@
+---
+import "../styles/tokens.css";
+import HeaderNav from "../components/organisms/HeaderNav.astro";
+import SiteFooter from "../components/organisms/SiteFooter.astro";
+import DocsSidebar from "../components/organisms/DocsSidebar.astro";
+import DocsToc from "../components/molecules/DocsToc.astro";
+
+interface TocItem {
+  id: string;
+  text: string;
+  depth?: 2 | 3;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  currentSlug?: string;
+  tocItems?: TocItem[];
+}
+
+const {
+  title = "CatchBug Documentation",
+  description = "Technical documentation and installation guides for CatchBug extension.",
+  currentSlug,
+  tocItems = [],
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/16.png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="/128.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph & Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body class="docs-body">
+    <HeaderNav />
+
+    <div class="docs-shell">
+      <div class="container docs-layout-grid">
+        <!-- Left Column: Navigation Sidebar (Child 1) -->
+        <DocsSidebar currentSlug={currentSlug} />
+
+        <!-- Center Column: Primary Documentation Content (Child 2) -->
+        <main class="docs-main" id="docs-content">
+          <slot />
+        </main>
+
+        <!-- Right Column: Sticky Table of Contents (Child 3) -->
+        {
+          tocItems.length > 0 && (
+            <aside class="docs-toc-wrapper" aria-label="Table of contents">
+              <DocsToc items={tocItems} />
+            </aside>
+          )
+        }
+      </div>
+    </div>
+
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .docs-body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-surface-base, #06090e);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .docs-shell {
+    background-color: var(--color-surface-base, #06090e);
+    flex: 1;
+    width: 100%;
+    position: relative;
+  }
+
+  .docs-layout-grid {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 220px;
+    gap: 2.5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+    box-sizing: border-box;
+  }
+
+  /* Main Reading Content Area */
+  .docs-main {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .docs-toc-wrapper {
+    min-width: 0;
+    height: 100%;
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 1180px) {
+    .docs-layout-grid {
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+
+    .docs-toc-wrapper {
+      display: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .docs-layout-grid {
+      grid-template-columns: 1fr;
+      padding-top: 1rem;
+      gap: 2rem;
+    }
+  }
+</style>

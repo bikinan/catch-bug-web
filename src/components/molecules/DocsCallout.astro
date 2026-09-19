@@ -1,0 +1,159 @@
+---
+import Icon from '../atoms/Icon.astro';
+
+interface Props {
+  variant?: 'note' | 'security' | 'warning' | 'tip';
+  title?: string;
+  class?: string;
+}
+
+const { variant = 'note', title, class: className = '' } = Astro.props;
+
+const iconMap = {
+  note: 'terminal',
+  security: 'shield',
+  warning: 'alert-triangle',
+  tip: 'sparkles',
+} as const;
+
+const defaultTitleMap = {
+  note: 'Note',
+  security: 'Security & Privacy Guarantee',
+  warning: 'Important Warning',
+  tip: 'Pro Tip',
+};
+
+const displayTitle = title || defaultTitleMap[variant];
+const iconName = iconMap[variant];
+---
+
+<aside class={`docs-callout callout-${variant} ${className}`} role="note">
+  <div class="callout-header">
+    <div class="callout-icon-box" aria-hidden="true">
+      <Icon name={iconName} size={16} />
+    </div>
+    <span class="callout-title">{displayTitle}</span>
+  </div>
+  <div class="callout-content">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .docs-callout {
+    margin: 1.5rem 0;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius-md, 10px);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-card);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .callout-icon-box {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm, 6px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .callout-title {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .callout-content {
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .callout-content :global(p) {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .callout-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .callout-content :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .callout-content :global(code) {
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.875rem;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm, 6px);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-mint, #6bf99c);
+  }
+
+  .callout-content :global(a) {
+    color: var(--color-mint, #6bf99c);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Variants */
+  .callout-security {
+    border-color: rgba(107, 249, 156, 0.3);
+    background: linear-gradient(180deg, rgba(107, 249, 156, 0.04) 0%, rgba(17, 26, 39, 0.8) 100%);
+  }
+
+  .callout-security .callout-icon-box {
+    background: rgba(107, 249, 156, 0.12);
+    color: var(--color-mint, #6bf99c);
+    border: 1px solid rgba(107, 249, 156, 0.25);
+  }
+
+  .callout-tip {
+    border-color: rgba(3, 169, 163, 0.3);
+    background: linear-gradient(180deg, rgba(3, 169, 163, 0.04) 0%, rgba(17, 26, 39, 0.8) 100%);
+  }
+
+  .callout-tip .callout-icon-box {
+    background: rgba(3, 169, 163, 0.15);
+    color: var(--color-teal, #03a9a3);
+    border: 1px solid rgba(3, 169, 163, 0.3);
+  }
+
+  .callout-warning {
+    border-color: rgba(245, 158, 11, 0.3);
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.04) 0%, rgba(17, 26, 39, 0.8) 100%);
+  }
+
+  .callout-warning .callout-icon-box {
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--color-warning, #f59e0b);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .callout-note {
+    border-color: var(--color-border);
+    background: rgba(17, 26, 39, 0.5);
+  }
+
+  .callout-note .callout-icon-box {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-subtle);
+  }
+</style>

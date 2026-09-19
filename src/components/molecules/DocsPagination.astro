@@ -1,0 +1,150 @@
+---
+import Icon from "../atoms/Icon.astro";
+
+interface DocNav {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  prev?: DocNav;
+  next?: DocNav;
+  class?: string;
+}
+
+const { prev, next, class: className } = Astro.props;
+---
+
+<nav
+  class:list={["docs-pagination", className]}
+  aria-label="Documentation pages"
+>
+  {
+    prev ? (
+      <a href={prev.href} class="pagination-card prev-card">
+        <div class="pagination-arrow">
+          <Icon name="arrow-left" size={16} class="arrow-icon-prev" />
+        </div>
+        <div class="pagination-text">
+          <span class="pagination-sublabel">Previous</span>
+          <span class="pagination-title">{prev.title}</span>
+        </div>
+      </a>
+    ) : (
+      <div class="pagination-spacer" />
+    )
+  }
+
+  {
+    next ? (
+      <a href={next.href} class="pagination-card next-card">
+        <div class="pagination-text">
+          <span class="pagination-sublabel">Next</span>
+          <span class="pagination-title">{next.title}</span>
+        </div>
+        <div class="pagination-arrow">
+          <Icon name="arrow-right" size={16} />
+        </div>
+      </a>
+    ) : (
+      <div class="pagination-spacer" />
+    )
+  }
+</nav>
+
+<style>
+  .docs-pagination {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 640px) {
+    .docs-pagination {
+      grid-template-columns: 1fr;
+    }
+    .pagination-spacer {
+      display: none;
+    }
+  }
+
+  .pagination-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md, 10px);
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .pagination-card:hover {
+    border-color: rgba(107, 249, 156, 0.4);
+    background: var(--color-surface-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .prev-card {
+    justify-content: flex-start;
+  }
+
+  .next-card {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .pagination-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-mint, #6bf99c);
+    flex-shrink: 0;
+  }
+
+  .arrow-icon-prev {
+    transform: rotate(180deg);
+  }
+
+  .pagination-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .pagination-sublabel {
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pagination-title {
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pagination-card:hover .pagination-title {
+    color: var(--color-mint, #6bf99c);
+  }
+
+  .pagination-spacer {
+    display: block;
+  }
+</style>

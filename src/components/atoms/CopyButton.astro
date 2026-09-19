@@ -1,0 +1,115 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  textToCopy: string;
+  label?: string;
+  class?: string;
+}
+
+const { textToCopy, label = 'Copy', class: className = '' } = Astro.props;
+---
+
+<button
+  type="button"
+  class={`copy-btn ${className}`}
+  data-copy-text={textToCopy}
+  aria-label={`Copy: ${textToCopy}`}
+  title="Copy to clipboard"
+>
+  <span class="copy-icon-idle">
+    <Icon name="copy" size={13} />
+  </span>
+  <span class="copy-icon-success is-hidden" aria-hidden="true">
+    <Icon name="check" size={13} />
+  </span>
+  {label && <span class="copy-btn-label">{label}</span>}
+</button>
+
+<script>
+  function setupCopyButtons() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.copy-btn');
+
+    buttons.forEach((btn) => {
+      if (btn.getAttribute('data-copy-initialized') === 'true') return;
+      btn.setAttribute('data-copy-initialized', 'true');
+
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const text = btn.getAttribute('data-copy-text');
+        if (!text) return;
+
+        try {
+          await navigator.clipboard.writeText(text);
+          const idleIcon = btn.querySelector('.copy-icon-idle');
+          const successIcon = btn.querySelector('.copy-icon-success');
+          const labelSpan = btn.querySelector('.copy-btn-label');
+
+          btn.classList.add('is-copied');
+          idleIcon?.classList.add('is-hidden');
+          successIcon?.classList.remove('is-hidden');
+          if (labelSpan) labelSpan.textContent = 'Copied!';
+
+          setTimeout(() => {
+            btn.classList.remove('is-copied');
+            idleIcon?.classList.remove('is-hidden');
+            successIcon?.classList.add('is-hidden');
+            if (labelSpan) labelSpan.textContent = 'Copy';
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy to clipboard:', err);
+        }
+      });
+    });
+  }
+
+  setupCopyButtons();
+  document.addEventListener('astro:page-load', setupCopyButtons);
+</script>
+
+<style>
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm, 6px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+    color: var(--color-text-secondary, #94a3b8);
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+    line-height: 1;
+  }
+
+  .copy-btn:hover {
+    color: var(--color-text-primary, #f0fdf4);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .copy-btn.is-copied {
+    color: var(--color-mint, #6bf99c);
+    border-color: rgba(107, 249, 156, 0.35);
+    background: rgba(107, 249, 156, 0.1);
+  }
+
+  .is-hidden {
+    display: none !important;
+  }
+
+  .copy-icon-idle,
+  .copy-icon-success {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .copy-icon-success {
+    color: var(--color-mint, #6bf99c);
+  }
+</style>

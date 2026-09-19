@@ -1,0 +1,162 @@
+@import '@fontsource/inter';
+@import '@fontsource/syne';
+
+/* CatchBug Design System Tokens & Base CSS */
+:root {
+  /* Color Palette - Bioluminescent Avionics */
+  --color-primary: #6bf99c;
+  --color-primary-hover: #58e287;
+  --color-primary-subtle: rgba(107, 249, 156, 0.12);
+  --color-primary-glow: rgba(107, 249, 156, 0.35);
+
+  --color-secondary: #03a9a3;
+  --color-secondary-hover: #028b86;
+  --color-secondary-subtle: rgba(3, 169, 163, 0.16);
+  --color-secondary-glow: rgba(3, 169, 163, 0.35);
+
+  --color-surface-base: #06090e;
+  --color-surface-raised: #0c121c;
+  --color-surface-card: #111a27;
+  --color-surface-card-hover: #162233;
+  --color-surface-overlay: rgba(17, 26, 39, 0.85);
+
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-highlight: rgba(107, 249, 156, 0.3);
+  --color-border-highlight-teal: rgba(3, 169, 163, 0.4);
+
+  --color-text-primary: #f0fdf4;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-text-on-primary: #06090e;
+
+  --color-status-error: #f43f5e;
+  --color-status-error-subtle: rgba(244, 63, 94, 0.15);
+  --color-status-warning: #f59e0b;
+  --color-status-warning-subtle: rgba(245, 158, 11, 0.15);
+  --color-status-success: #10b981;
+
+  /* Typography */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, monospace;
+
+  /* Shapes & Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+
+  /* Layout */
+  --container-max-width: 1280px;
+  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  background-color: var(--color-surface-base);
+  color: var(--color-text-primary);
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+  background-color: var(--color-surface-base);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Atmospheric Top Spotlight */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1400px;
+  height: 600px;
+  background: radial-gradient(
+    circle at 50% -10%,
+    rgba(107, 249, 156, 0.12) 0%,
+    rgba(3, 169, 163, 0.06) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Browser Surfaces Theming */
+::selection {
+  background-color: rgba(107, 249, 156, 0.25);
+  color: var(--color-primary);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-card-hover);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive Container */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+}

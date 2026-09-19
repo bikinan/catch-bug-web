@@ -1,0 +1,1456 @@
+---
+import TelemetryHeader from "../molecules/TelemetryHeader.astro";
+import Icon from "../atoms/Icon.astro";
+---
+
+<div class="sandbox-container" id="hero-sandbox">
+  <!-- Window Frame Header -->
+  <TelemetryHeader
+    url="https://staging.app/checkout"
+    statusText="Extension Active"
+  />
+
+  <!-- Sandbox Canvas -->
+  <div class="sandbox-canvas">
+    <!-- Camera Flash Effect for "Snap" -->
+    <div class="camera-flash" id="camera-flash" aria-hidden="true"></div>
+
+    <!-- Background Simulated Host Application -->
+    <div class="simulated-app">
+      <div class="sim-content">
+        <div class="sim-plan-card">
+          <div class="sim-card-header">
+            <span class="sim-badge">Test Sandbox Environment</span>
+            <span class="sim-cost">$49/mo</span>
+          </div>
+          <p class="sim-desc">
+            Click below to simulate network errors and watch CatchBug intercept
+            telemetry live.
+          </p>
+          <div class="sim-actions">
+            <button type="button" class="btn-sim-crash" id="btn-trigger-crash">
+              <span class="btn-pulse-dot"></span>
+              <span>Trigger Simulated 500 API Crash</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authentic CatchBug Extension Overlay Panel (Matches Real Extension UI) -->
+    <div
+      class="catchbug-panel"
+      id="catchbug-panel"
+      role="region"
+      aria-label="CatchBug Inspector"
+    >
+      <!-- 1. Top Bar -->
+      <div class="panel-top-bar">
+        <div class="brand-cluster">
+          <img
+            src="/32.png"
+            srcset="/16.png 16w, /32.png 32w, /48.png 48w, /96.png 96w, /128.png 128w"
+            sizes="20px"
+            alt="CatchBug Logo"
+            width="20"
+            height="20"
+            class="catchbug-logo-img"
+          />
+          <span class="brand-title">CatchBug</span>
+          <span class="count-badge" id="event-count-badge">4/10</span>
+        </div>
+
+        <div class="top-actions">
+          <button
+            type="button"
+            class="btn-top btn-snap"
+            id="btn-snap"
+            title="Take visual snapshot"
+          >
+            <span class="btn-icon">&#x1F4F8;</span>
+            <span>Snap</span>
+          </button>
+          <button
+            type="button"
+            class="btn-top btn-copy"
+            id="btn-copy-top"
+            title="Copy markdown bug report"
+          >
+            <span class="btn-icon">&#x1F4CB;</span>
+            <span id="copy-btn-label">Copy</span>
+          </button>
+          <button
+            type="button"
+            class="btn-top btn-clear"
+            id="btn-clear"
+            title="Clear events"
+          >
+            <span>Clear</span>
+          </button>
+          <button
+            type="button"
+            class="btn-top btn-collapse"
+            id="btn-collapse"
+            title="Minimize dock"
+            aria-label="Minimize dock"
+          >
+            <span>&#x2304;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Filter Tabs -->
+      <div class="filter-tabs" role="tablist">
+        <button
+          type="button"
+          class="tab-btn active"
+          data-tab="all"
+          role="tab"
+          aria-selected="true"
+        >
+          <span>All</span>
+          <span class="tab-count count-all" id="tab-count-all">4</span>
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          data-tab="console"
+          role="tab"
+          aria-selected="false"
+        >
+          <span>Console</span>
+          <span class="tab-count">0</span>
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          data-tab="network"
+          role="tab"
+          aria-selected="false"
+        >
+          <span>Network</span>
+          <span class="tab-count count-net" id="tab-count-net">4</span>
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          data-tab="journey"
+          role="tab"
+          aria-selected="false"
+        >
+          <span class="tab-icon">&#x1F43E;</span>
+          <span>Journey</span>
+          <span class="tab-count">1</span>
+        </button>
+        <button
+          type="button"
+          class="tab-btn tab-ai"
+          data-tab="ai"
+          role="tab"
+          aria-selected="false"
+        >
+          <span class="tab-icon">&#x1F9E0;</span>
+          <span>AI</span>
+        </button>
+      </div>
+
+      <!-- 3. Scroller Slider Track -->
+      <div class="timeline-scroller">
+        <button type="button" class="scroll-arrow" aria-label="Scroll left"
+          >&#x25C2;</button
+        >
+        <div class="scroll-track">
+          <div class="scroll-thumb"></div>
+        </div>
+        <button type="button" class="scroll-arrow" aria-label="Scroll right"
+          >&#x25B8;</button
+        >
+      </div>
+
+      <!-- 4. Intercepted Event Cards List -->
+      <div class="events-container" id="events-container">
+        <!-- Injected Crash Card (Appears on simulation click) -->
+        <div class="event-card event-crash hidden" id="card-crash">
+          <div
+            class="card-header"
+            role="button"
+            tabindex="0"
+            aria-expanded="true"
+          >
+            <span class="badge-post">POST</span>
+            <span class="badge-http-error">HTTP 500</span>
+            <span class="event-time" id="crash-time">9:24:02 AM</span>
+            <button
+              type="button"
+              class="card-action-btn btn-copy-card"
+              title="Copy event"
+              aria-label="Copy event">&#x1F4CB;</button
+            >
+            <span class="card-expand-icon">&#x2303;</span>
+          </div>
+          <div class="card-summary">
+            <span class="url-host">staging.app</span>
+            <span class="url-path">/api/v1/checkout/charge</span>
+            <span class="badge-redacted">
+              <Icon name="shield" size={12} />
+              <span>Token Redacted</span>
+            </span>
+          </div>
+          <!-- Expanded Details Pane for Crash -->
+          <div class="card-details">
+            <div class="status-info-row">
+              <span class="status-info-label">STATUS INFO:</span>
+              <span class="status-info-text text-err"
+                >HTTP 500 Internal Server Error / Crashed</span
+              >
+            </div>
+
+            <div class="detail-block">
+              <span class="detail-heading">FULL URL:</span>
+              <pre
+                class="detail-code-box"><code>https://staging.app/api/v1/checkout/charge?env=staging&attempt=1&session=live_triage</code></pre>
+            </div>
+
+            <div class="detail-block">
+              <span class="detail-heading">SANITIZED HEADERS & PAYLOAD:</span>
+              <pre
+                class="detail-code-box"><code>Authorization: <span class="syntax-masked">Bearer ******************** [MASKED]</span>
+Content-Type: application/json
+
+&#123;
+  "plan": "enterprise",
+  "amount": 4900,
+  "status": "failed",
+  "error": "PaymentGatewayTimeout"
+&#125;</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 1 (Expanded by default as in user reference image) -->
+        <div class="event-card event-expanded" id="event-card-1">
+          <div
+            class="card-header"
+            role="button"
+            tabindex="0"
+            aria-expanded="true"
+          >
+            <span class="badge-post">POST</span>
+            <span class="badge-http-zero">HTTP 0</span>
+            <span class="event-time">9:23:16 AM</span>
+            <button
+              type="button"
+              class="card-action-btn btn-copy-card"
+              title="Copy event"
+              aria-label="Copy event">&#x1F4CB;</button
+            >
+            <span class="card-expand-icon">&#x2303;</span>
+          </div>
+          <div class="card-summary">
+            <span class="url-host">www.google-analytics.com</span>
+            <span class="url-path">/g/collect</span>
+            <span class="badge-params">?35 params</span>
+          </div>
+
+          <!-- Expanded Details Pane (Exactly as in user reference image) -->
+          <div class="card-details">
+            <div class="status-info-row">
+              <span class="status-info-label">STATUS INFO:</span>
+              <span class="status-info-text">Network Error / Blocked</span>
+            </div>
+
+            <div class="detail-block">
+              <span class="detail-heading">FULL URL:</span>
+              <pre
+                class="detail-code-box"><code>https://www.google-analytics.com/g/collect?v=2&tid=G-VVFQS6FS7G&gtm=45je69f3h1v9195327979za200zd9195327979&_p=1789611790670&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAAQ&ae=a&cid=2107531644.1787648750&frm=0&ngs=1&pscdl=noapi&rcb=12&sr=1366x768&uaa=x86&uab=64&uafvl=Chromium%3B152.0.7977.64%7CNot%253FA_Brand%3B24.0.0.0%7CGoogle%2520Chrome%3B152.0.7977.64&</code></pre>
+            </div>
+
+            <div class="detail-block">
+              <span class="detail-heading">QUERY PARAMETERS (35):</span>
+              <pre
+                class="detail-code-box"><code class="params-code"><span class="param-key">v</span>: <span class="param-val">2</span>
+<span class="param-key">tid</span>: <span class="param-val">G-VVFQS6FS7G</span>
+<span class="param-key">gtm</span>: <span class="param-val">45je69f3h1v9195327979za200zd9195327979</span>
+<span class="param-key">_p</span>: <span class="param-val">1789611790670</span>
+<span class="param-key">gcd</span>: <span class="param-val">13l3l3l3l1l1</span></code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 2 -->
+        <div class="event-card" id="event-card-2">
+          <div
+            class="card-header"
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+          >
+            <span class="badge-post">POST</span>
+            <span class="badge-http-zero">HTTP 0</span>
+            <span class="event-time">9:23:16 AM</span>
+            <button
+              type="button"
+              class="card-action-btn btn-copy-card"
+              title="Copy event"
+              aria-label="Copy event">&#x1F4CB;</button
+            >
+            <span class="card-expand-icon">&#x2304;</span>
+          </div>
+          <div class="card-summary">
+            <span class="url-host">www.google-analytics.com</span>
+            <span class="url-path">/g/collect</span>
+            <span class="badge-params">?34 params</span>
+          </div>
+          <div class="card-details hidden">
+            <div class="status-info-row">
+              <span class="status-info-label">STATUS INFO:</span>
+              <span class="status-info-text">Network Error / Blocked</span>
+            </div>
+            <div class="detail-block">
+              <span class="detail-heading">FULL URL:</span>
+              <pre
+                class="detail-code-box"><code>https://www.google-analytics.com/g/collect?v=2&tid=G-VVFQS6FS7G&_p=1789611790670</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 3 -->
+        <div class="event-card" id="event-card-3">
+          <div
+            class="card-header"
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+          >
+            <span class="badge-post">POST</span>
+            <span class="badge-http-zero">HTTP 0</span>
+            <span class="event-time">9:23:15 AM</span>
+            <button
+              type="button"
+              class="card-action-btn btn-copy-card"
+              title="Copy event"
+              aria-label="Copy event">&#x1F4CB;</button
+            >
+            <span class="card-expand-icon">&#x2304;</span>
+          </div>
+          <div class="card-summary">
+            <span class="url-host">analytics.google.com</span>
+            <span class="url-path">/g/collect</span>
+            <span class="badge-params">?35 params</span>
+          </div>
+          <div class="card-details hidden">
+            <div class="status-info-row">
+              <span class="status-info-label">STATUS INFO:</span>
+              <span class="status-info-text">Network Error / Blocked</span>
+            </div>
+            <div class="detail-block">
+              <span class="detail-heading">FULL URL:</span>
+              <pre
+                class="detail-code-box"><code>https://analytics.google.com/g/collect?v=2&tid=G-VVFQS6FS7G</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 4 -->
+        <div class="event-card" id="event-card-4">
+          <div
+            class="card-header"
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+          >
+            <span class="badge-post">POST</span>
+            <span class="badge-http-zero">HTTP 0</span>
+            <span class="event-time">9:23:11 AM</span>
+            <button
+              type="button"
+              class="card-action-btn btn-copy-card"
+              title="Copy event"
+              aria-label="Copy event">&#x1F4CB;</button
+            >
+            <span class="card-expand-icon">&#x2304;</span>
+          </div>
+          <div class="card-summary">
+            <span class="url-host">analytics.google.com</span>
+            <span class="url-path">/g/collect</span>
+            <span class="badge-params">?35 params</span>
+          </div>
+          <div class="card-details hidden">
+            <div class="status-info-row">
+              <span class="status-info-label">STATUS INFO:</span>
+              <span class="status-info-text">Network Error / Blocked</span>
+            </div>
+            <div class="detail-block">
+              <span class="detail-heading">FULL URL:</span>
+              <pre
+                class="detail-code-box"><code>https://analytics.google.com/g/collect?v=2&tid=G-VVFQS6FS7G</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Bottom Status Bar -->
+      <div class="panel-footer">
+        <div class="footer-integrations">
+          <button
+            type="button"
+            class="btn-integration"
+            title="Configure GitHub Issues Dispatch"
+          >
+            <span class="int-icon">&#x1F419;</span>
+            <span>GitHub</span>
+            <span class="int-badge">Setup</span>
+          </button>
+          <button
+            type="button"
+            class="btn-integration"
+            title="Configure Slack Webhook Dispatch"
+          >
+            <span class="int-icon">&#x1F4AC;</span>
+            <span>Slack</span>
+            <span class="int-badge">Setup</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="btn-export-md"
+          id="btn-export-md"
+          title="Export markdown bug report"
+        >
+          <span class="export-icon">&#x1F4BE;</span>
+          <span>Export MD</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Authentic Minimized Floating Pill Dock (Matches Image 2 exactly) -->
+    <div
+      class="minimized-dock hidden"
+      id="minimized-dock"
+      role="button"
+      tabindex="0"
+      aria-label="Expand CatchBug Inspector"
+    >
+      <img
+        src="/32.png"
+        srcset="/16.png 16w, /32.png 32w, /48.png 48w, /96.png 96w, /128.png 128w"
+        sizes="18px"
+        alt="CatchBug Logo"
+        width="18"
+        height="18"
+        class="dock-logo"
+      />
+      <span class="dock-title">CatchBug</span>
+      <span class="dock-badge-solid" id="min-dock-count">4</span>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="sandbox-toast hidden" id="sandbox-toast">
+      <span class="toast-check">&#x2713;</span>
+      <span id="toast-message">Markdown report copied to clipboard!</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sandbox-container {
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(6, 9, 14, 0.75);
+    transition: border-color var(--transition-base);
+  }
+
+  .sandbox-container:hover {
+    border-color: rgba(107, 249, 156, 0.25);
+  }
+
+  .sandbox-canvas {
+    position: relative;
+    min-height: 520px;
+    background-color: var(--color-surface-base);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+  }
+
+  /* Flash Animation */
+  .camera-flash {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-text-primary);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 100ms ease-out;
+  }
+
+  .camera-flash.flash-active {
+    opacity: 0.8;
+  }
+
+  /* Simulated Background App */
+  .simulated-app {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    opacity: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .sim-plan-card {
+    background-color: var(--color-surface-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    max-width: 320px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sim-card-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+  }
+
+  .sim-badge {
+    color: var(--color-primary);
+  }
+
+  .sim-cost {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .sim-desc {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .btn-sim-crash {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background-color: var(--color-status-error-subtle);
+    border: 1px solid var(--color-status-error);
+    border-radius: var(--radius-sm);
+    color: var(--color-status-error);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  /* ---------------------------------------------------- */
+  /* AUTHENTIC CATCHBUG EXTENSION OVERLAY PANEL          */
+  /* ---------------------------------------------------- */
+  .catchbug-panel {
+    position: relative;
+    z-index: 20;
+    width: 100%;
+    max-width: 440px;
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-border-highlight-teal);
+    border-radius: var(--radius-lg);
+    box-shadow:
+      0 16px 40px rgba(6, 9, 14, 0.75),
+      0 0 0 1px var(--color-border-subtle);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: var(--font-body);
+    transition: all var(--transition-base);
+  }
+
+  /* Top Bar */
+  .panel-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background-color: var(--color-surface-raised);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .brand-cluster {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .catchbug-logo-img {
+    display: block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  .brand-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .count-badge {
+    background-color: var(--color-status-error-subtle);
+    border: 1px solid var(--color-status-error);
+    color: var(--color-status-error);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    line-height: 1.2;
+    transition: all var(--transition-fast);
+  }
+
+  .count-badge.pulse-alert {
+    animation: badge-flash 600ms ease-out 2;
+  }
+
+  @keyframes badge-flash {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.15);
+      background-color: var(--color-status-error);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+    user-select: none;
+    transition: all var(--transition-fast);
+    line-height: 1.2;
+  }
+
+  .btn-snap {
+    background-color: var(--color-surface-card-hover);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-primary);
+  }
+
+  .btn-snap:hover {
+    background-color: var(--color-surface-raised);
+    color: var(--color-primary);
+  }
+
+  .btn-copy {
+    background-color: var(--color-status-error);
+    color: var(--color-text-primary);
+    border-color: var(--color-status-error);
+    font-weight: 700;
+    box-shadow: 0 0 10px var(--color-status-error-subtle);
+  }
+
+  .btn-copy:hover {
+    background-color: var(--color-status-error);
+    filter: brightness(1.15);
+    box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
+  }
+
+  .btn-clear {
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-secondary);
+  }
+
+  .btn-clear:hover {
+    background-color: var(--color-surface-card-hover);
+    color: var(--color-text-primary);
+  }
+
+  .btn-collapse {
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    padding: 4px 8px;
+  }
+
+  .btn-collapse:hover {
+    color: var(--color-text-primary);
+  }
+
+  /* 2. Filter Tabs */
+  .filter-tabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: var(--color-surface-base);
+    border-bottom: 1px solid var(--color-border-subtle);
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+  }
+
+  .tab-btn:hover {
+    color: var(--color-text-primary);
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  .tab-btn.active {
+    background-color: var(--color-surface-card-hover);
+    border-color: var(--color-border-highlight-teal);
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .tab-count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0 4px;
+    border-radius: var(--radius-sm);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-secondary);
+  }
+
+  .count-all {
+    background-color: var(--color-status-error-subtle);
+    color: var(--color-status-error);
+  }
+
+  .count-net {
+    background-color: var(--color-secondary-subtle);
+    color: var(--color-secondary);
+  }
+
+  .tab-icon {
+    font-size: 0.75rem;
+  }
+
+  /* 3. Timeline Scroller */
+  .timeline-scroller {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: var(--color-surface-raised);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .scroll-arrow {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 2px 4px;
+  }
+
+  .scroll-arrow:hover {
+    color: var(--color-text-primary);
+  }
+
+  .scroll-track {
+    flex: 1;
+    height: 12px;
+    background-color: var(--color-surface-base);
+    border-radius: var(--radius-full);
+    position: relative;
+    padding: 2px;
+  }
+
+  .scroll-thumb {
+    width: 75%;
+    height: 100%;
+    background-color: var(--color-text-secondary);
+    border-radius: var(--radius-full);
+  }
+
+  /* 4. Events Container & Cards */
+  .events-container {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 340px;
+    overflow-y: auto;
+    background-color: var(--color-surface-card);
+  }
+
+  .event-card {
+    background-color: var(--color-surface-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: all var(--transition-fast);
+  }
+
+  .event-card:hover {
+    border-color: var(--color-border-highlight-teal);
+    background-color: var(--color-surface-card-hover);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .badge-post {
+    border: 1px solid var(--color-status-warning);
+    color: var(--color-status-warning);
+    background-color: var(--color-status-warning-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: var(--radius-sm);
+    line-height: 1.1;
+  }
+
+  .badge-http-zero {
+    border: 1px solid var(--color-status-error);
+    color: var(--color-status-error);
+    background-color: var(--color-status-error-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: var(--radius-sm);
+    line-height: 1.1;
+  }
+
+  .badge-http-error {
+    border: 1px solid var(--color-status-error);
+    color: var(--color-text-primary);
+    background-color: var(--color-status-error);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: var(--radius-sm);
+    line-height: 1.1;
+  }
+
+  .event-time {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  .card-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: var(--radius-sm);
+    line-height: 1;
+    transition: color var(--transition-fast);
+  }
+
+  .card-action-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  .card-expand-icon {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    line-height: 1;
+    margin-left: 2px;
+  }
+
+  .card-summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+
+  .url-host {
+    color: var(--color-text-secondary);
+  }
+
+  .url-path {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+
+  .badge-params {
+    margin-left: auto;
+    background-color: var(--color-status-warning-subtle);
+    color: var(--color-status-warning);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+  }
+
+  .badge-redacted {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: var(--color-primary-subtle);
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-highlight);
+  }
+
+  /* Injected Crash Card Styling */
+  .event-crash {
+    border-color: var(--color-status-error);
+    background-color: rgba(244, 63, 94, 0.1);
+  }
+
+  /* Expanded Card Details (Matching Reference Image 1) */
+  .card-details {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--color-border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .status-info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .status-info-label {
+    color: var(--color-text-muted);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .status-info-text {
+    color: var(--color-text-primary);
+  }
+
+  .status-info-text.text-err {
+    color: var(--color-status-error);
+    font-weight: 600;
+  }
+
+  .detail-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .detail-heading {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  .detail-code-box {
+    background-color: var(--color-surface-base);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    overflow-x: auto;
+    max-height: 100px;
+    overflow-y: auto;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+
+  .params-code {
+    display: block;
+    line-height: 1.45;
+  }
+
+  .param-key {
+    color: var(--color-status-warning);
+    font-weight: 600;
+  }
+
+  .param-val {
+    color: var(--color-text-primary);
+  }
+
+  .syntax-masked {
+    color: var(--color-primary);
+    font-weight: 700;
+    background-color: var(--color-primary-subtle);
+    padding: 1px 4px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* 5. Bottom Panel Footer */
+  .panel-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: var(--color-surface-raised);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .footer-integrations {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-integration {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .btn-integration:hover {
+    background-color: var(--color-surface-card-hover);
+    border-color: var(--color-border-highlight-teal);
+  }
+
+  .int-icon {
+    font-size: 0.75rem;
+  }
+
+  .int-badge {
+    background-color: var(--color-status-warning-subtle);
+    border: 1px solid var(--color-status-warning);
+    color: var(--color-status-warning);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 1px 4px;
+    border-radius: var(--radius-sm);
+    line-height: 1;
+  }
+
+  .btn-export-md {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .btn-export-md:hover {
+    background-color: var(--color-surface-card-hover);
+    border-color: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  .export-icon {
+    font-size: 0.75rem;
+  }
+
+  /* ---------------------------------------------------- */
+  /* AUTHENTIC MINIMIZED FLOATING PILL DOCK (Image 2)     */
+  /* ---------------------------------------------------- */
+  .minimized-dock {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 6px 6px 14px;
+    background-color: rgba(10, 14, 22, 0.96);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(6, 9, 14, 0.85);
+    user-select: none;
+    z-index: 30;
+    transition: all var(--transition-base);
+  }
+
+  .minimized-dock:hover {
+    border-color: var(--color-border-highlight-teal);
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 35px rgba(6, 9, 14, 0.95),
+      0 0 12px rgba(107, 249, 156, 0.2);
+  }
+
+  .dock-logo {
+    display: block;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+
+  .dock-title {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .dock-badge-solid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background-color: var(--color-status-error);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-full);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 0 8px var(--color-status-error-subtle);
+  }
+
+  /* Toast Notification */
+  .sandbox-toast {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-primary);
+    box-shadow:
+      0 8px 24px rgba(6, 9, 14, 0.8),
+      0 0 16px var(--color-primary-glow);
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    z-index: 50;
+    pointer-events: none;
+    animation: toast-in 200ms ease-out;
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  .toast-check {
+    font-weight: 700;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* Mobile and Small Screen Adaptation */
+  @media (max-width: 480px) {
+    .sandbox-canvas {
+      min-height: 480px;
+      padding: 8px;
+    }
+
+    .catchbug-panel {
+      max-width: 100%;
+    }
+
+    .panel-top-bar {
+      padding: 8px 10px;
+    }
+
+    .top-actions {
+      gap: 4px;
+    }
+
+    .btn-top {
+      padding: 4px 6px;
+      font-size: 0.6875rem;
+    }
+
+    .minimized-dock {
+      bottom: 16px;
+      right: 16px;
+      padding: 5px 5px 5px 12px;
+    }
+  }
+</style>
+
+<script>
+  function initInteractiveCatchBug() {
+    const btnTrigger = document.getElementById("btn-trigger-crash");
+    const cardCrash = document.getElementById("card-crash");
+    const eventCountBadge = document.getElementById("event-count-badge");
+    const tabCountAll = document.getElementById("tab-count-all");
+    const tabCountNet = document.getElementById("tab-count-net");
+    const btnCopyTop = document.getElementById("btn-copy-top");
+    const copyBtnLabel = document.getElementById("copy-btn-label");
+    const btnExportMd = document.getElementById("btn-export-md");
+    const btnSnap = document.getElementById("btn-snap");
+    const cameraFlash = document.getElementById("camera-flash");
+    const btnClear = document.getElementById("btn-clear");
+    const btnCollapse = document.getElementById("btn-collapse");
+    const catchbugPanel = document.getElementById("catchbug-panel");
+    const minimizedDock = document.getElementById("minimized-dock");
+    const minDockCount = document.getElementById("min-dock-count");
+    const toast = document.getElementById("sandbox-toast");
+    const toastMessage = document.getElementById("toast-message");
+    const filterTabs = document.querySelectorAll(".filter-tabs .tab-btn");
+
+    let toastTimer: any = null;
+
+    function showToast(msg: string) {
+      if (!toast || !toastMessage) return;
+      toastMessage.textContent = msg;
+      toast.classList.remove("hidden");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 2500);
+    }
+
+    const sampleMarkdownReport = `### 🐛 [CatchBug] HTTP 500 on POST /api/v1/checkout/charge
+**Status**: 500 Internal Server Error (142ms)
+**URL**: https://staging.app/checkout
+**Timestamp**: 9:24:02 AM
+
+#### 🔒 Sanitized Request Headers
+\`\`\`http
+Authorization: Bearer ******************** [MASKED]
+Content-Type: application/json
+\`\`\`
+
+#### 📦 Payload
+\`\`\`json
+{
+  "plan": "enterprise",
+  "amount": 4900,
+  "status": "failed",
+  "error": "PaymentGatewayTimeout"
+}
+\`\`\`
+
+#### 🐾 Action Breadcrumbs
+1. \`9:23:11 AM\` POST analytics.google.com/g/collect (HTTP 0)
+2. \`9:23:15 AM\` POST analytics.google.com/g/collect (HTTP 0)
+3. \`9:24:02 AM\` Clicked button#btn-trigger-crash -> 500 Server Error
+`;
+
+    // 1. Accordion Expand/Collapse on each Event Card
+    const allCards = document.querySelectorAll(".event-card");
+    allCards.forEach((card) => {
+      const header = card.querySelector(".card-header");
+      const details = card.querySelector(".card-details");
+      const expandIcon = card.querySelector(".card-expand-icon");
+
+      if (header && details) {
+        header.addEventListener("click", (e) => {
+          // Prevent click on copy button from collapsing
+          if ((e.target as HTMLElement).closest(".btn-copy-card")) return;
+
+          const isExpanded = !details.classList.contains("hidden");
+          if (isExpanded) {
+            details.classList.add("hidden");
+            if (expandIcon) expandIcon.textContent = "⌄";
+            header.setAttribute("aria-expanded", "false");
+          } else {
+            details.classList.remove("hidden");
+            if (expandIcon) expandIcon.textContent = "⌃";
+            header.setAttribute("aria-expanded", "true");
+          }
+        });
+      }
+
+      const copyCardBtn = card.querySelector(".btn-copy-card");
+      if (copyCardBtn) {
+        copyCardBtn.addEventListener("click", async (e) => {
+          e.stopPropagation();
+          try {
+            await navigator.clipboard.writeText(sampleMarkdownReport);
+            showToast("📋 Event telemetry copied to clipboard!");
+          } catch {
+            showToast("📋 Copied!");
+          }
+        });
+      }
+    });
+
+    // 2. Trigger Crash
+    if (btnTrigger) {
+      btnTrigger.addEventListener("click", () => {
+        if (catchbugPanel && catchbugPanel.classList.contains("hidden")) {
+          catchbugPanel.classList.remove("hidden");
+          minimizedDock?.classList.add("hidden");
+        }
+
+        if (cardCrash) {
+          cardCrash.classList.remove("hidden");
+          const crashTime = document.getElementById("crash-time");
+          if (crashTime) {
+            const now = new Date();
+            crashTime.textContent = now.toLocaleTimeString();
+          }
+        }
+
+        if (eventCountBadge) {
+          eventCountBadge.textContent = "5/10";
+          eventCountBadge.classList.add("pulse-alert");
+          setTimeout(
+            () => eventCountBadge.classList.remove("pulse-alert"),
+            1200,
+          );
+        }
+        if (minDockCount) minDockCount.textContent = "5";
+        if (tabCountAll) tabCountAll.textContent = "5";
+        if (tabCountNet) tabCountNet.textContent = "5";
+
+        showToast("💥 500 API crash intercepted & masked by CatchBug!");
+      });
+    }
+
+    // 3. Snap feature (Camera Flash)
+    if (btnSnap && cameraFlash) {
+      btnSnap.addEventListener("click", () => {
+        cameraFlash.classList.add("flash-active");
+        setTimeout(() => {
+          cameraFlash.classList.remove("flash-active");
+          showToast("📸 In-viewport visual snapshot captured!");
+        }, 120);
+      });
+    }
+
+    // 4. Copy Markdown Report
+    async function copyReport() {
+      try {
+        await navigator.clipboard.writeText(sampleMarkdownReport);
+        if (copyBtnLabel) copyBtnLabel.textContent = "Copied!";
+        showToast("📋 Markdown report copied to clipboard!");
+        setTimeout(() => {
+          if (copyBtnLabel) copyBtnLabel.textContent = "Copy";
+        }, 2000);
+      } catch {
+        showToast("📋 Report copied!");
+      }
+    }
+
+    if (btnCopyTop) btnCopyTop.addEventListener("click", copyReport);
+    if (btnExportMd) btnExportMd.addEventListener("click", copyReport);
+
+    // 5. Clear events
+    if (btnClear) {
+      btnClear.addEventListener("click", () => {
+        if (cardCrash) cardCrash.classList.add("hidden");
+        if (eventCountBadge) eventCountBadge.textContent = "0/10";
+        if (minDockCount) minDockCount.textContent = "0";
+        if (tabCountAll) tabCountAll.textContent = "0";
+        if (tabCountNet) tabCountNet.textContent = "0";
+        showToast("Cleared captured telemetry");
+      });
+    }
+
+    // 6. Minimize & Expand (Pill Dock - Image 2)
+    if (btnCollapse && catchbugPanel && minimizedDock) {
+      btnCollapse.addEventListener("click", () => {
+        catchbugPanel.classList.add("hidden");
+        minimizedDock.classList.remove("hidden");
+        showToast("Dock minimized (Click pill to reopen)");
+      });
+    }
+
+    if (minimizedDock && catchbugPanel) {
+      minimizedDock.addEventListener("click", () => {
+        minimizedDock.classList.add("hidden");
+        catchbugPanel.classList.remove("hidden");
+      });
+    }
+
+    // 7. Tabs Filter
+    filterTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        filterTabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        const tabName = tab.getAttribute("data-tab");
+        showToast(`Filtered view: ${tabName?.toUpperCase()}`);
+      });
+    });
+  }
+
+  initInteractiveCatchBug();
+  document.addEventListener("astro:page-load", initInteractiveCatchBug);
+</script>

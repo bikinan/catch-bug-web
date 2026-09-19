@@ -1,0 +1,184 @@
+---
+import Icon from '../atoms/Icon.astro';
+
+interface TocItem {
+  id: string;
+  text: string;
+  depth?: 2 | 3;
+}
+
+interface Props {
+  items: TocItem[];
+  class?: string;
+}
+
+const { items, class: className = '' } = Astro.props;
+---
+
+<nav class={`docs-toc ${className}`} aria-label="Table of contents">
+  <div class="toc-header">
+    <Icon name="file-text" size={14} />
+    <span class="toc-title">On this page</span>
+  </div>
+
+  <ul class="toc-list" role="list">
+    {items.map((item) => (
+      <li class={`toc-item depth-${item.depth || 2}`}>
+        <a href={`#${item.id}`} class="toc-link" data-toc-id={item.id}>
+          {item.text}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <div class="toc-footer">
+    <a
+      href="https://github.com/bikinan/catch-bug/issues/new"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="toc-community-link"
+    >
+      <Icon name="bug" size={13} />
+      <span>Report Doc Issue</span>
+    </a>
+    <a
+      href="https://github.com/bikinan/catch-bug"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="toc-community-link"
+    >
+      <Icon name="github" size={13} />
+      <span>GitHub Repo</span>
+    </a>
+  </div>
+</nav>
+
+<script>
+  function setupTocScrollSpy() {
+    const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+    if (!links.length) return;
+
+    const headingIds = Array.from(links).map((link) => link.getAttribute('data-toc-id')).filter(Boolean) as string[];
+    const headings = headingIds.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+
+    if (!headings.length) return;
+
+    let activeId = '';
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activeId = entry.target.id;
+          }
+        });
+
+        if (activeId) {
+          links.forEach((link) => {
+            const isMatch = link.getAttribute('data-toc-id') === activeId;
+            link.classList.toggle('is-active', isMatch);
+          });
+        }
+      },
+      {
+        rootMargin: '-80px 0% -60% 0%',
+        threshold: 0,
+      }
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+  }
+
+  setupTocScrollSpy();
+  document.addEventListener('astro:page-load', setupTocScrollSpy);
+</script>
+
+<style>
+  .docs-toc {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: calc(72px + 2rem);
+    max-height: calc(100vh - 72px - 3rem);
+    overflow-y: auto;
+    padding-left: 1rem;
+    border-left: 1px solid var(--color-border);
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-primary);
+  }
+
+  .toc-title {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-primary);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toc-item.depth-3 {
+    padding-left: 0.75rem;
+  }
+
+  .toc-link {
+    display: block;
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+    word-break: break-word;
+  }
+
+  .toc-link:hover {
+    color: var(--color-text-primary);
+  }
+
+  .toc-link.is-active {
+    color: var(--color-mint, #6bf99c);
+    font-weight: 600;
+    transform: translateX(2px);
+  }
+
+  .toc-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .toc-community-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .toc-community-link:hover {
+    color: var(--color-mint, #6bf99c);
+  }
+</style>

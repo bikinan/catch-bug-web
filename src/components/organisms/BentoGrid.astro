@@ -1,0 +1,679 @@
+---
+import BentoCard from '../molecules/BentoCard.astro';
+import Icon from '../atoms/Icon.astro';
+---
+
+<section class="bento-section" id="features" aria-label="Core Capabilities">
+  <!-- Atmospheric Avionics Glow -->
+  <div class="bento-ambient-glow" aria-hidden="true"></div>
+
+  <div class="container bento-container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="section-headline">
+        Everything you need to catch bugs.<br />
+        <span class="teal-accent">Without ever opening DevTools.</span>
+      </h2>
+      <p class="section-subtext">
+        Engineered for frontend engineers and QA specialists who need instant, sanitized, context-rich diagnostic reports with zero setup friction.
+      </p>
+    </div>
+
+    <!-- 12-Column Asymmetric Bento Grid -->
+    <div class="bento-grid">
+      <!-- Feature 1 (ColSpan 8): Isolated Shadow DOM -->
+      <BentoCard
+        colSpan={8}
+        title="Isolated Closed Shadow DOM: Zero CSS Bleed"
+        description="CatchBug runs inside a strictly isolated ShadowRoot container. Host application styles, CSS resets, global stylesheets, and framework conflicts cannot bleed into or break the CatchBug overlay."
+        icon="layers"
+        badgeText="Zero Interference"
+      >
+        <div class="shadow-dom-visual">
+          <div class="host-dom-side">
+            <div class="dom-tag">&lt;host-application&gt;</div>
+            <div class="code-snippet-line">
+              <span class="css-sel">* &#123;</span>
+              <span class="css-prop">all: unset !important;</span>
+              <span class="css-sel">&#125;</span>
+            </div>
+            <div class="css-bleed-tag">Host CSS Resets Blocked &rarr;</div>
+          </div>
+
+          <div class="dom-divider">
+            <div class="shield-barrier">
+              <Icon name="shield" size={16} />
+              <span>#shadow-root (closed)</span>
+            </div>
+          </div>
+
+          <div class="catchbug-dom-side">
+            <div class="dom-tag tag-isolated">&lt;catchbug-dock&gt;</div>
+            <div class="isolated-badge">
+              <span class="dot-green"></span>
+              <span>Pristine Component Tree</span>
+            </div>
+            <div class="isolated-meta">100% Layout Immunity &bull; Zero Z-Index Collisions</div>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- Feature 2 (ColSpan 4): Zero-Credential Sanitization -->
+      <BentoCard
+        colSpan={4}
+        title="Zero-Credential Leak Masking"
+        description="Pre-flight regex scrubber automatically redacts Bearer tokens, cookies, passwords, and API keys client-side before telemetry is exported or shared."
+        icon="lock"
+        badgeText="100% Client-Side"
+      >
+        <div class="masking-visual">
+          <div class="masking-row unmasked">
+            <span class="masking-label">RAW HEADER</span>
+            <code class="masking-code">Bearer eyJhbGciOiJIUzI1Ni...</code>
+          </div>
+          <div class="masking-arrow">&darr; Pre-Flight Regex Scrubber &darr;</div>
+          <div class="masking-row masked">
+            <span class="masking-label label-safe">REDACTED EXPORT</span>
+            <code class="masking-code code-safe">Bearer ******************** [MASKED]</code>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- Feature 3 (ColSpan 4): DOM Action Breadcrumbs -->
+      <BentoCard
+        colSpan={4}
+        title="DOM Action Breadcrumbs"
+        description="Auto-logs the chronological chain of user interactions preceding the bug. Replay exact click targets, input events, and navigation steps without screen recordings."
+        icon="footprints"
+        badgeText="Auto-Recorded"
+      >
+        <div class="breadcrumbs-visual">
+          <div class="b-crumb">
+            <span class="b-time">00:01</span>
+            <span class="b-action">Clicked</span>
+            <code class="b-target">button#checkout-pro</code>
+          </div>
+          <div class="b-crumb">
+            <span class="b-time">00:03</span>
+            <span class="b-action">Filled</span>
+            <code class="b-target">input#promo-code</code>
+          </div>
+          <div class="b-crumb b-crash">
+            <span class="b-time">00:05</span>
+            <span class="b-action action-err">Triggered</span>
+            <code class="b-target text-err">POST /pay &rarr; HTTP 500</code>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- Feature 4 (ColSpan 4): Direct Multi-Channel Dispatch -->
+      <BentoCard
+        colSpan={4}
+        title="1-Click Dispatch to Your Stack"
+        description="Skip manual ticket formatting. Dispatch pre-populated bug reports directly to GitHub Issues, Slack channels, or Discord webhooks with full reproduction telemetry."
+        icon="send"
+        badgeText="Instant Sync"
+      >
+        <div class="dispatch-visual">
+          <div class="dispatch-option active">
+            <Icon name="github" size={16} />
+            <span>GitHub Issues</span>
+            <span class="dispatch-status">Ready</span>
+          </div>
+          <div class="dispatch-option">
+            <span class="dispatch-icon">&#x1F4AC;</span>
+            <span>Slack Webhook</span>
+            <span class="dispatch-status">Configured</span>
+          </div>
+          <div class="dispatch-option">
+            <span class="dispatch-icon">&#x1F4BE;</span>
+            <span>Markdown Export</span>
+            <span class="dispatch-status">1-Click</span>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- Feature 5 (ColSpan 4): BYOK AI Root Cause Triage -->
+      <BentoCard
+        colSpan={4}
+        title="BYOK AI Root Cause Analysis"
+        description="Connect your own Google Gemini API key or utilize Chrome's Built-in AI to summarize stack traces, identify failure root causes, and suggest code fixes on the spot."
+        icon="brain"
+        badgeText="BYOK Gemini"
+      >
+        <div class="ai-visual">
+          <div class="ai-header">
+            <Icon name="sparkles" size={14} class="ai-sparkle-icon" />
+            <span class="ai-model-tag">Gemini 2.5 Flash Analysis</span>
+          </div>
+          <p class="ai-diagnosis">
+            <strong>Root Cause:</strong> Null reference in <code>checkout.ts:42</code>. Request payload is missing required <code>paymentToken</code> field.
+          </p>
+        </div>
+      </BentoCard>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { getLenis } from '../../lib/lenis';
+
+  function setupBento() {
+    const section = document.getElementById("features");
+    if (!section) return;
+
+    const header = section.querySelector(".section-header");
+    const grid = section.querySelector(".bento-grid");
+    const glow = section.querySelector<HTMLElement>(".bento-ambient-glow");
+    const cards = section.querySelectorAll<HTMLElement>(".bento-card");
+
+    cards.forEach((card, idx) => {
+      card.style.setProperty("--card-index", idx.toString());
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === header) {
+              section.classList.add("header-revealed");
+            } else if (entry.target === grid) {
+              section.classList.add("grid-revealed");
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    if (header) observer.observe(header);
+    if (grid) observer.observe(grid);
+
+    // Connect with Lenis scroll for high-performance layered card parallax
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    let secTop = section.offsetTop;
+    let secHeight = section.offsetHeight;
+    let winHeight = window.innerHeight;
+
+    function updateMetrics() {
+      if (!section) return;
+      secTop = section.offsetTop;
+      secHeight = section.offsetHeight;
+      winHeight = window.innerHeight;
+    }
+
+    const ro = new ResizeObserver(() => updateMetrics());
+    ro.observe(section);
+    window.addEventListener("resize", updateMetrics, { passive: true });
+
+    function handleScroll(scroll: number) {
+      if (!section) return;
+      const visibleStart = secTop - winHeight;
+      const visibleEnd = secTop + secHeight;
+
+      if (scroll >= visibleStart && scroll <= visibleEnd) {
+        const progress = (scroll - visibleStart) / (secHeight + winHeight);
+        const centeredProgress = progress - 0.5;
+
+        if (glow) {
+          glow.style.transform = `translate3d(0, ${(centeredProgress * 70).toFixed(1)}px, 0)`;
+        }
+
+        // Apply asymmetric multi-layer float on desktop/tablet (>= 768px)
+        if (window.innerWidth >= 768) {
+          cards.forEach((card, idx) => {
+            // Even indexed cards float upwards, odd indexed cards float downwards
+            const factor = idx % 2 === 0 ? -32 : 24;
+            const yOffset = (centeredProgress * factor).toFixed(1);
+            card.style.transform = `translate3d(0, ${yOffset}px, 0)`;
+          });
+        }
+      }
+    }
+
+    function attachLenisScroll() {
+      getLenis()?.on("scroll", (e) => handleScroll(e.scroll));
+    }
+
+    if (getLenis()) {
+      attachLenisScroll();
+    } else {
+      window.addEventListener("lenis:ready", attachLenisScroll, { once: true });
+    }
+  }
+
+  setupBento();
+  document.addEventListener("astro:page-load", setupBento);
+</script>
+
+<style>
+  .bento-section {
+    padding-top: clamp(80px, 10vw, 120px);
+    padding-bottom: clamp(80px, 10vw, 120px);
+    position: relative;
+    border-top: 1px solid var(--color-border-subtle);
+    overflow: hidden;
+  }
+
+  /* Atmospheric Avionics Ambient Glow */
+  .bento-ambient-glow {
+    position: absolute;
+    top: 20%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    max-width: 800px;
+    max-height: 800px;
+    border-radius: var(--radius-full, 9999px);
+    background: radial-gradient(
+      circle,
+      rgba(3, 169, 163, 0.05) 0%,
+      rgba(107, 249, 156, 0.02) 40%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+    opacity: 0.6;
+  }
+
+  .bento-container {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Hardware-Accelerated Scroll Reveal */
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: clamp(48px, 6vw, 64px);
+    max-width: 800px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .bento-section.header-revealed .section-header {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  :global(.bento-grid .bento-card) {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color var(--transition-base),
+      box-shadow var(--transition-base);
+    transition-delay:
+      calc(var(--card-index, 0) * 80ms + 100ms),
+      calc(var(--card-index, 0) * 80ms + 100ms),
+      0ms,
+      0ms;
+    will-change: opacity, transform;
+  }
+
+  .bento-section.grid-revealed :global(.bento-grid .bento-card) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-headline {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    text-wrap: balance;
+  }
+
+  .teal-accent {
+    color: var(--color-secondary);
+  }
+
+  .section-subtext {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 65ch;
+  }
+
+  /* Bento Grid Layout */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--space-lg);
+    }
+  }
+
+  /* Feature 1 Visual: Isolated Shadow DOM */
+  .shadow-dom-visual {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    background-color: var(--color-surface-base);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .shadow-dom-visual {
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+  }
+
+  .host-dom-side, .catchbug-dom-side {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background-color: var(--color-surface-raised);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .dom-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .tag-isolated {
+    color: var(--color-primary);
+  }
+
+  .code-snippet-line {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .css-sel {
+    color: var(--color-status-error);
+  }
+
+  .css-prop {
+    color: var(--color-text-primary);
+    margin-left: 8px;
+  }
+
+  .css-bleed-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-status-warning);
+  }
+
+  .dom-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shield-barrier {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: var(--color-primary-subtle);
+    border: 1px solid var(--color-border-highlight);
+    border-radius: var(--radius-full);
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .isolated-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-primary);
+  }
+
+  .dot-green {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary-glow);
+  }
+
+  .isolated-meta {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Feature 2 Visual: Zero-Credential Masking */
+  .masking-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--color-surface-base);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+  }
+
+  .masking-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .masking-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+
+  .label-safe {
+    color: var(--color-primary);
+  }
+
+  .masking-code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background-color: var(--color-surface-raised);
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .code-safe {
+    color: var(--color-primary);
+    background-color: var(--color-primary-subtle);
+    border: 1px solid rgba(107, 249, 156, 0.2);
+    font-weight: 600;
+  }
+
+  .masking-arrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-secondary);
+    text-align: center;
+  }
+
+  /* Feature 3 Visual: Breadcrumbs */
+  .breadcrumbs-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--color-surface-base);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+  }
+
+  .b-crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 6px 8px;
+    background-color: var(--color-surface-raised);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+
+  .b-time {
+    color: var(--color-text-muted);
+  }
+
+  .b-action {
+    color: var(--color-text-secondary);
+  }
+
+  .b-target {
+    color: var(--color-text-primary);
+  }
+
+  .b-crash {
+    background-color: var(--color-status-error-subtle);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+  }
+
+  .action-err {
+    color: var(--color-status-error);
+    font-weight: 700;
+  }
+
+  .text-err {
+    color: var(--color-status-error);
+    font-weight: 600;
+  }
+
+  /* Feature 4 Visual: Dispatch */
+  .dispatch-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--color-surface-base);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+  }
+
+  .dispatch-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: var(--color-surface-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    transition: all var(--transition-fast);
+  }
+
+  .dispatch-option.active {
+    border-color: var(--color-border-highlight);
+    background-color: var(--color-surface-card-hover);
+  }
+
+  .dispatch-icon {
+    font-size: 0.875rem;
+  }
+
+  .dispatch-status {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-primary);
+  }
+
+  /* Feature 5 Visual: AI Triage */
+  .ai-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--color-surface-base);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+  }
+
+  .ai-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-secondary);
+  }
+
+  .ai-sparkle-icon {
+    color: var(--color-primary);
+  }
+
+  .ai-model-tag {
+    font-weight: 600;
+  }
+
+  .ai-diagnosis {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    background-color: var(--color-surface-raised);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .ai-diagnosis strong {
+    color: var(--color-text-primary);
+  }
+
+  .ai-diagnosis code {
+    font-family: var(--font-mono);
+    color: var(--color-primary);
+    font-size: 0.75rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bento-ambient-glow {
+      filter: blur(40px);
+      opacity: 0.3;
+      transform: none !important;
+    }
+
+    .section-header,
+    :global(.bento-grid .bento-card) {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      will-change: auto !important;
+    }
+  }
+</style>

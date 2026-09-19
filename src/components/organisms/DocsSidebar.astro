@@ -1,0 +1,419 @@
+---
+import Icon from "../atoms/Icon.astro";
+
+interface NavItem {
+  label: string;
+  slug: string;
+  href: string;
+  badge?: string;
+}
+
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+interface Props {
+  currentSlug?: string;
+  class?: string;
+}
+
+const { currentSlug = "getting-started", class: className = "" } = Astro.props;
+
+const navSections: NavSection[] = [
+  {
+    title: "Getting Started",
+    items: [
+      {
+        label: "Overview & Status",
+        slug: "getting-started",
+        href: "/docs/getting-started",
+      },
+      {
+        label: "Step-by-Step Install",
+        slug: "installation",
+        href: "/docs/installation",
+      },
+    ],
+  },
+  {
+    title: "Architecture",
+    items: [
+      {
+        label: "Core Architecture",
+        slug: "architecture",
+        href: "/docs/architecture",
+      },
+    ],
+  },
+  {
+    title: "Security & Privacy",
+    items: [
+      {
+        label: "Security & Privacy Model",
+        slug: "security-and-privacy",
+        href: "/docs/security-and-privacy",
+      },
+    ],
+  },
+  {
+    title: "Maintenance",
+    items: [
+      { label: "Updating CatchBug", slug: "updating", href: "/docs/updating" },
+      {
+        label: "Troubleshooting & FAQ",
+        slug: "troubleshooting",
+        href: "/docs/troubleshooting",
+      },
+    ],
+  },
+];
+---
+
+<div class="docs-sidebar-wrapper">
+  <!-- Mobile Floating Docs Drawer Trigger -->
+  <div class="mobile-docs-bar">
+    <button
+      type="button"
+      class="mobile-docs-toggle"
+      id="docs-sidebar-toggle"
+      aria-expanded="false"
+      aria-controls="docs-sidebar-nav"
+      aria-label="Toggle documentation navigation"
+    >
+      <Icon name="menu" size={16} />
+      <span>Documentation Menu</span>
+    </button>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <aside
+    class={`docs-sidebar ${className}`}
+    id="docs-sidebar-nav"
+    aria-label="Documentation Navigation"
+  >
+    <div class="sidebar-inner">
+      <div class="sidebar-header">
+        <div class="sidebar-title-row">
+          <Icon name="terminal" size={16} />
+          <span class="sidebar-title">CatchBug Docs</span>
+          <span class="sidebar-badge">v0.1.0</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        {
+          navSections.map((section) => (
+            <div class="nav-section-group">
+              <h4 class="nav-section-title">{section.title}</h4>
+              <ul class="nav-section-list" role="list">
+                {section.items.map((item) => {
+                  const isActive = currentSlug === item.slug;
+                  return (
+                    <li class="nav-item">
+                      <a
+                        href={item.href}
+                        class:list={["nav-link", { "is-active": isActive }]}
+                        aria-current={isActive ? "page" : undefined}
+                        data-nav-slug={item.slug}
+                      >
+                        <span class="nav-link-indicator" aria-hidden="true" />
+                        <span class="nav-link-text">{item.label}</span>
+                        {item.badge && (
+                          <span class="nav-item-badge">{item.badge}</span>
+                        )}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Mobile Backdrop -->
+  <div class="sidebar-backdrop" id="docs-sidebar-backdrop" aria-hidden="true">
+  </div>
+</div>
+
+<script>
+  function setupDocsSidebar() {
+    const toggle = document.getElementById("docs-sidebar-toggle");
+    const sidebar = document.getElementById("docs-sidebar-nav");
+    const backdrop = document.getElementById("docs-sidebar-backdrop");
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>(
+      ".docs-sidebar .nav-link",
+    );
+
+    if (!toggle || !sidebar || !backdrop) return;
+
+    if (toggle.getAttribute("data-sidebar-initialized") === "true") return;
+    toggle.setAttribute("data-sidebar-initialized", "true");
+
+    const openSidebar = () => {
+      sidebar.classList.add("is-open");
+      backdrop.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
+      document.body.style.overflow = "hidden";
+    };
+
+    const closeSidebar = () => {
+      sidebar.classList.remove("is-open");
+      backdrop.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    };
+
+    toggle.addEventListener("click", () => {
+      const isOpen = sidebar.classList.contains("is-open");
+      if (isOpen) closeSidebar();
+      else openSidebar();
+    });
+
+    backdrop.addEventListener("click", closeSidebar);
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        if (window.innerWidth < 768) {
+          closeSidebar();
+        }
+      });
+    });
+  }
+
+  setupDocsSidebar();
+  document.addEventListener("astro:page-load", setupDocsSidebar);
+</script>
+
+<style>
+  .docs-sidebar-wrapper {
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
+    .docs-sidebar-wrapper {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  /* Mobile Bar */
+  .mobile-docs-bar {
+    display: none;
+    position: sticky;
+    top: 72px;
+    z-index: 40;
+    width: 100%;
+    background: rgba(6, 9, 14, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.625rem var(--space-md);
+  }
+
+  .mobile-docs-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm, 6px);
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .mobile-docs-toggle:hover {
+    border-color: rgba(107, 249, 156, 0.3);
+    color: var(--color-mint, #6bf99c);
+  }
+
+  @media (max-width: 767px) {
+    .mobile-docs-bar {
+      display: block;
+    }
+  }
+
+  /* Desktop Sidebar */
+  .docs-sidebar {
+    width: 100%;
+    flex-shrink: 0;
+    position: sticky;
+    top: calc(72px + 2rem);
+    max-height: calc(100vh - 72px - 3rem);
+    overflow-y: auto;
+    padding-right: 1.5rem;
+    border-right: 1px solid var(--color-border);
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  .sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding-bottom: 2rem;
+  }
+
+  .sidebar-header {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .sidebar-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-mint, #6bf99c);
+  }
+
+  .sidebar-title {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .sidebar-badge {
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: var(--radius-sm, 6px);
+    background: rgba(107, 249, 156, 0.12);
+    color: var(--color-mint, #6bf99c);
+    border: 1px solid rgba(107, 249, 156, 0.25);
+    margin-left: auto;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-section-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nav-section-title {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin: 0;
+    padding-left: 0.5rem;
+  }
+
+  .nav-section-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm, 6px);
+    color: var(--color-text-secondary);
+    font-family: var(--font-body, var(--font-display));
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    line-height: 1.4;
+  }
+
+  .nav-link-indicator {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all var(--transition-fast);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .nav-link:hover .nav-link-indicator {
+    background: var(--color-mint, #6bf99c);
+  }
+
+  .nav-link.is-active {
+    color: var(--color-mint, #6bf99c);
+    background: rgba(107, 249, 156, 0.08);
+    font-weight: 600;
+  }
+
+  .nav-link.is-active .nav-link-indicator {
+    background: var(--color-mint, #6bf99c);
+    box-shadow: 0 0 8px var(--color-mint, #6bf99c);
+  }
+
+  .nav-item-badge {
+    margin-left: auto;
+    font-family: var(--font-code, var(--font-mono));
+    font-size: 0.75rem;
+    padding: 1px 5px;
+    border-radius: var(--radius-full, 9999px);
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    line-height: 1;
+  }
+
+  /* Mobile Drawer Behavior */
+  @media (max-width: 767px) {
+    .docs-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      height: 100vh;
+      background: rgba(6, 9, 14, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 60;
+      transform: translateX(-100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 1.5rem;
+      border-right: 1px solid var(--color-border);
+    }
+
+    .docs-sidebar.is-open {
+      transform: translateX(0);
+    }
+
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 9, 14, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 55;
+    }
+
+    .sidebar-backdrop.is-open {
+      display: block;
+    }
+  }
+</style>
